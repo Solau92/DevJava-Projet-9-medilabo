@@ -45,7 +45,7 @@ public class PatientController {
 	public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient) throws PatientNotFoundException, PatientAlreadyExistsException {
 
 		log.info("/patient/update in PatientController");
-		return ResponseEntity.status(HttpStatus.CREATED).body(patientService.update(patient));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(patientService.update(patient));
 	}
 
 	@DeleteMapping("/patient/delete")
