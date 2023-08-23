@@ -1,18 +1,23 @@
 package com.medilabo.medilabofrontapp.controller;
 
-import feign.FeignException;
-import jakarta.validation.Valid;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.medilabo.medilabofrontapp.bean.PatientBean;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
 
-import java.util.List;
+import feign.FeignException;
+import jakarta.validation.Valid;
 
 @Controller 
 public class ClientController {

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Index</title>
+    <link rel="stylesheet" type="text/css" href="webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
+
+</head>
+
+<body>
+
+<a href="/patient/add" class="btn btn-primary btn-sm">Add patient</a>
+
+<h1>List of patients :</h1>
+
+<div>
+<table class="table table-bordered">
+    <thead>
+    <tr>
+        <th scope="col">firstName</th>
+        <th scope="col">lastName</th>
+        <th scope="col">dateOfBirth</th>
+        <th scope="col">gender</th>
+        <th scope="col">address</th>
+        <th scope="col">phoneNumber</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="patient : ${patients}">
+        <td th:text="${patient.firstName}"></td>
+        <td th:text="${patient.lastName}"></td>
+        <td th:text="${patient.dateOfBirth}"></td>
+        <td th:text="${patient.gender}"></td>
+        <td th:text="${patient.address}"></td>
+        <td th:text="${patient.phoneNumber}"></td>
+        <td>
+            <a th:href="@{/patient/update/{id}(id=${patient.id})}"}>Edit</a>
+            <a th:href="@{/patient/delete/{id}(id=${patient.id})}"}>Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</div>
+
+
+
+</body>
+</html>

@@ -11,6 +11,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="patient")
@@ -34,12 +36,12 @@ public class Patient {
 	@Column(nullable = false)
 	private String gender;
 
-	@Column
+	@Column(nullable = false)
 	private String address;
 
-	// TODO : voir format
 	@Column
-	private Long phoneNumber;
+	@Pattern(regexp="(^$|[0-9]{10})")
+	private String phoneNumber;
 
 	public int getId() {
 		return id;
@@ -88,12 +90,12 @@ public class Patient {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	public Long getPhoneNumber() {
+	
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
-
-	public void setPhoneNumber(Long phoneNumber) {
+	
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 }

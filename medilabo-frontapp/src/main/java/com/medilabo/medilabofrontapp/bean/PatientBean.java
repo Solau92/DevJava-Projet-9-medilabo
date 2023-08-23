@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Pattern;
 
 public class PatientBean {
 
@@ -25,8 +26,9 @@ public class PatientBean {
 	private String gender;
 	
 	private String address;
-	
-	private Long phoneNumber;
+		
+	@Pattern(regexp="(^$|[0-9]{10})", message = "phoneNumber must contain ten digits")
+	private String phoneNumber;
 
 	public PatientBean() {
 
@@ -79,12 +81,12 @@ public class PatientBean {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
-	public Long getPhoneNumber() {
+	
+	public String getPhoneNumber() {
 		return phoneNumber;
 	}
 
-	public void setPhoneNumber(Long phoneNumber) {
+	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
 
