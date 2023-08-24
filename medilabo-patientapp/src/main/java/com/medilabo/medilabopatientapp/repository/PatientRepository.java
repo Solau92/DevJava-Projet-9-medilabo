@@ -10,6 +10,15 @@ import com.medilabo.medilabopatientapp.entity.Patient;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer>, JpaSpecificationExecutor<Patient> {
 
-	public Optional<Patient> findByFirstNameAndLastNameAndDateOfBirth(String firstName, String lastName, LocalDate dateOfBirth);
+	/**
+	 * Returns an Optional containing the patient found given its firstName,
+	 * lastName and dateOfBirth, and an empty Optional if no patient found.
+	 * 
+	 * @param firstName
+	 * @param lastName
+	 * @param dateOfBirth
+	 * @return Optional<Patient>
+	 */
+	public Optional<Patient> findByFirstNameAndLastNameAndDateOfBirth(String firstName, String lastName,
+			LocalDate dateOfBirth);
 }
-
