@@ -34,7 +34,7 @@ public class PatientController {
 	 * 
 	 * @return ResponseEntity<List<Patient>> with http status ACCEPTED
 	 */
-	@GetMapping("/patients")
+	@GetMapping("/patient/patients")
 	public ResponseEntity<List<Patient>> findAllPatients() {
 		log.info("/patients : Getting the list of all patients");
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(patientService.findAll());

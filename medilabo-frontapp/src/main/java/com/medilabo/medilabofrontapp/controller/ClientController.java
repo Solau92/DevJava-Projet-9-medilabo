@@ -30,11 +30,11 @@ public class ClientController {
 		this.patientsProxy = patientsProxy;
 	}
 
-	@RequestMapping("/")
+	@RequestMapping("/patient/patients")
 	public String index(Model model) {
 		List<PatientBean> patients = patientsProxy.patients();
 		model.addAttribute("patients", patients);
-		return "index";
+		return "patients";
 	}
 
 	@GetMapping("/patient/add")
@@ -53,8 +53,8 @@ public class ClientController {
 		}
 
 		log.info("ClientController result has not error");
-		PatientBean patientSaved = patientsProxy.addPatient(patient);
-		return "redirect:/";
+		patientsProxy.addPatient(patient);
+		return "redirect:/patient/patients";
 	}
 
 	@GetMapping("/patient/update/{id}")
@@ -75,19 +75,19 @@ public class ClientController {
 		log.info("ClientController result has not error");
 		patient.setId(id);
 		try {
-			PatientBean patientUpdated = patientsProxy.updatePatient(patient);
+			patientsProxy.updatePatient(patient);
 		} catch (FeignException e) {
 			log.info(e.getMessage());
-			model.addAttribute(("error"), e.responseBody());
+			model.addAttribute(("error"), e.getLocalizedMessage());
 			return "updatePatient";
 		}
-		return "redirect:/";
+		return "redirect:/patient/patients";
 	}
 
 	@GetMapping("/patient/delete/{id}")
 	public String deletePatient (@PathVariable("id") int id, @Valid @ModelAttribute("patient") PatientBean patient, BindingResult result, Model model) {
 
 		patientsProxy.deletePatient(patient);
-		return "redirect:/";
+		return "redirect:/patient/patients";
 	}
 }
