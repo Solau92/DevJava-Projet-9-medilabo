@@ -14,6 +14,9 @@ public class SpringCloudConfig {
 				.route(r -> r.path("/ms-patient/patient/**")
 						.filters(f -> f.rewritePath("/ms-patient/patient/(?<segment>.*)", "/patient/${segment}"))
                         .uri("http://localhost:8082"))
+				.route(r -> r.path("/auth/login")
+						.filters(f -> f.rewritePath("/auth/login", "/login"))
+						.uri("http://localhost:8081"))
                 .build();
 	}
 	

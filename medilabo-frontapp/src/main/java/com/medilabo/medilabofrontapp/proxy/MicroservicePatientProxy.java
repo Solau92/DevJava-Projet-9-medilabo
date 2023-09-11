@@ -7,22 +7,22 @@ import org.springframework.web.bind.annotation.*;
 
 import com.medilabo.medilabofrontapp.bean.PatientBean;
 
-@FeignClient(name = "microservice-gateway", url = "localhost:8081")
+@FeignClient(name = "microservice-gateway", url = "localhost:8081", contextId = "microservice-gateway")
 public interface MicroservicePatientProxy {
-
+	
 	@GetMapping("/ms-patient/patient/patients")
-	List<PatientBean> patients();
-
+	List<PatientBean> patients(@RequestHeader("Authorization") String header);
+	
 	@GetMapping("/ms-patient/patient/{id}")
-	PatientBean getPatient(@PathVariable("id") int id);
+	PatientBean getPatient(@RequestHeader("Authorization") String header, @PathVariable("id") int id);
 
 	@PostMapping("/ms-patient/patient/validate")
-	PatientBean addPatient(@RequestBody PatientBean patient);
+	PatientBean addPatient(@RequestHeader("Authorization") String header, @RequestBody PatientBean patient);
 
 	@PostMapping("/ms-patient/patient/validateUpdate")
-	PatientBean updatePatient(@RequestBody PatientBean patient);
+	PatientBean updatePatient(@RequestHeader("Authorization") String header, @RequestBody PatientBean patient);
 
 	@DeleteMapping("/ms-patient/patient/delete")
-	void deletePatient(@RequestBody PatientBean patient);
+	void deletePatient(@RequestHeader("Authorization") String header, @RequestBody PatientBean patient);
 	
 }

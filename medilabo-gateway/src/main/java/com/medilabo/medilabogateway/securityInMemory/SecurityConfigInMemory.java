@@ -14,9 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.authentication.logout.DelegatingServerLogoutHandler;
-import org.springframework.security.web.server.authentication.logout.SecurityContextServerLogoutHandler;
-import org.springframework.security.web.server.authentication.logout.WebSessionServerLogoutHandler;
 
 @Configuration
 @EnableWebFluxSecurity
@@ -31,6 +28,7 @@ public class SecurityConfigInMemory {
 	public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
 
 		http
+		.csrf(csrf -> csrf.disable())
 		.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated()).httpBasic(withDefaults());
 		return http.build();
 	}
@@ -38,10 +36,10 @@ public class SecurityConfigInMemory {
 	@Bean
 	public MapReactiveUserDetailsService  userDetailsService() {
 
-		UserDetails user = User.builder().username("user").password(passwordEncoder().encode("password"))
+		UserDetails user = User.builder().username("user10").password(passwordEncoder().encode("password"))
 				.build();
 
-		UserDetails admin = User.builder().username("admin").password(passwordEncoder().encode("admin"))
+		UserDetails admin = User.builder().username("admin10").password(passwordEncoder().encode("admin"))
 				.build();
 		return new MapReactiveUserDetailsService(user, admin);
 	}

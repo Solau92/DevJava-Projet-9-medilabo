@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<title>Index</title>
+<link rel="stylesheet" type="text/css"
+	href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
+
+</head>
+
+<body>
+
+	<form method="post" role="form" th:action="@{/login}"
+		th:object="${user}" class="form-horizontal">
+
+		<div class="ligne">
+			<label class="formulaire"> Username</label> <input type="text"
+				id="username" name="username" class="form-control"
+				th:field="*{username}" placeholder="Enter username" />
+			<p th:errors="*{username}" th:if="${#fields.hasErrors('username')}"></p>			
+			
+			
+		</div>
+
+		<div class="ligne">
+			<label class="formulaire"> Password</label> <input type="password"
+				id="password" name="password" class="form-control"
+				th:field="*{password}" placeholder="Enter password" />
+			<p th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></p>
+		</div>
+
+		<div>
+			<button type="submit" class="blueButton">Submit</button>
+		</div>
+	</form>
+
+</body>
+</html>
