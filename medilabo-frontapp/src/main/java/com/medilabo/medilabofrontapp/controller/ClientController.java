@@ -26,7 +26,7 @@ import jakarta.validation.Valid;
 public class ClientController {
 
 	private final MicroservicePatientProxy patientsProxy;
-	
+
 	private final AuthenticationProxy authenticationProxy;
 
 	private static final Logger log = LoggerFactory.getLogger(ClientController.class);
@@ -55,31 +55,30 @@ public class ClientController {
 
 	@PostMapping("/login")
 	public String login(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-
+		
 		if (result.hasErrors()) {
-			log.error("error !!");
+			log.error("Result has error in login");
 			return "login";
 		}
-		
+
 		byte[] encodedBytes = Base64.getEncoder().encode((user.getUsername() + ":" + user.getPassword()).getBytes());
 		String authHeader = "Basic " + new String(encodedBytes);
-		log.info("authHeader in setAuthHeader : {}", authHeader);
-		
+		log.info("authHeader in login : {}", authHeader);
+
 		try {
 			authenticationProxy.login(authHeader);
 			this.loggedUser.setUsername(user.getUsername());
 			this.loggedUser.setPassword(user.getPassword());
-	
+
 		} catch (FeignException e) {
-			log.info("Exception status login :" + e.status());
+			log.info("Exception status login : {}", e.status());
 			if (e.status() == 401) {
-				url = "/";
+				this.url = "/";
 			}
 		}
 
-		String urlTempo = url;
+		String urlTempo = this.url;
 		resetUrl();
-
 		return "redirect:" + urlTempo;
 	}
 
@@ -96,9 +95,10 @@ public class ClientController {
 			return "patients";
 		} catch (FeignException e) {
 
-			log.info("Exception status :" + e.status());
+			log.info("Exception status : {}", e.status());
+
 			if (e.status() == 401) {
-				url = "/patient/patients";
+				this.url = "/patient/patients";
 			}
 			return "redirect:/";
 		}
@@ -106,13 +106,13 @@ public class ClientController {
 
 	@GetMapping("/patient/add")
 	public String addPatientForm(Model model) {
-		
-		if(this.loggedUser.getUsername() == null || this.loggedUser.getPassword () == null) {
+
+		if (this.loggedUser.getUsername() == null || this.loggedUser.getPassword() == null) {
 			log.info("logged User null");
-			url = "/patient/add";
-			return "redirect:/";		
+			this.url = "/patient/add";
+			return "redirect:/";
 		}
-		
+
 		model.addAttribute("user", this.loggedUser);
 		PatientBean patient = new PatientBean();
 		model.addAttribute("patient", patient);
@@ -123,7 +123,7 @@ public class ClientController {
 	public String validate(@Valid @ModelAttribute("patient") PatientBean patient, BindingResult result, Model model) {
 
 		if (result.hasErrors()) {
-			log.error("error !!");
+			log.error("Result has error in addPatient");
 			return "addPatient";
 		}
 
@@ -135,21 +135,33 @@ public class ClientController {
 			return "redirect:/patient/patients";
 		} catch (FeignException e) {
 
-			if (e.status() == 401 || e.status() == 403 || e.status() == 405) {
-			url = "/patient/add";
+			if (e.status() == 401) {
+				log.info("Exception status : {}", e.status());
+				this.url = "/patient/add";
+				return "redirect:/";
 			}
-			return "redirect:/";
+
+			if (e.status() == 400) {
+				log.info("Exception status : {}", e.status());
+				String message = "A patient with the same firstName, lastName and dateOfBirth already exists";
+				model.addAttribute(("error"), message);
+				return "addPatient";
+			}
+			return "addPatient";
 		}
-		
 	}
 
 	@GetMapping("/patient/update/{id}")
 	public String updatePatientForm(@PathVariable int id, Model model) {
-		
+
+		if (this.loggedUser.getUsername() == null || this.loggedUser.getPassword() == null) {
+			log.info("logged User null");
+			return "redirect:/";
+		}
+
 		String authHeader = setAuthHeader();
 		PatientBean patient = patientsProxy.getPatient(authHeader, id);
 		model.addAttribute("patient", patient);
-		
 		return "updatePatient";
 	}
 
@@ -158,38 +170,38 @@ public class ClientController {
 			BindingResult result, Model model) {
 
 		if (result.hasErrors()) {
-			log.error("error !!");
+			log.error("Result has error in updatePatient");
 			return "updatePatient";
 		}
 
 		patient.setId(id);
-		
+
 		String authHeader = setAuthHeader();
-		
+
 		try {
 			patientsProxy.updatePatient(authHeader, patient);
 			resetUrl();
 			return "redirect:/patient/patients";
 		} catch (FeignException e) {
-			
-			log.info("statut :" + e.status() + "message : " + e.getMessage());
+
+			log.info("statut : {} message : {}", e.status(), e.getMessage());
 			model.addAttribute(("error"), e.getLocalizedMessage());
-			
-			if(e.status() == 401) {
-				url = "/patient/validateUpdate/" + id;	
+
+			if (e.status() == 401) {
+				log.info("Exception status : {}", e.status());
+				this.url = "/patient/validateUpdate/" + id;
 				return "updatePatient";
 			}
-			
-			if(e.status() == 404) {
-				String message = "Patient not found";
+
+			if (e.status() == 400) {
+				log.info("Exception status : {}", e.status());
+				String message = "A patient with the same firstName, lastName and dateOfBirth already exists";
 				model.addAttribute(("error"), message);
 				return "updatePatient";
 			}
 
 		}
 		return "redirect:/patient/patients";
-
-		
 	}
 
 	@GetMapping("/patient/delete/{id}")
@@ -202,13 +214,12 @@ public class ClientController {
 			patientsProxy.deletePatient(authHeader, patient);
 			resetUrl();
 		} catch (FeignException e) {
-			if(e.status() == 401 || e.status() == 403) {
-			url = "/patient/patients";
-			return "redirect:/";
+			if (e.status() == 401) {
+				this.url = "/patient/patients";
+				return "redirect:/";
 			}
 		}
 		return "redirect:/patient/patients";
-
 	}
 
 ///////////////////////////// private methods ///////////////////////////// 

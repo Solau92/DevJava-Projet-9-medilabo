@@ -18,6 +18,8 @@
 		<form method="post" role="form" th:action="@{/patient/validate}"
 			th:object="${patient}">
 
+			<p th:if="${error}" th:text="${error}"></p>
+
 			<div class="ligne">
 				<label class="formulaire">First Name</label> <input
 					class="form-control" id="firstName" name="firstName"
