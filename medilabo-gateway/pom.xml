@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.medilabo</groupId>
 	<artifactId>medilabo-gateway</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-snapshot</version>
 	<name>medilabo-gateway</name>
 	<description>MediLabo Gateway</description>
 
