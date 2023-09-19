@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.medilabo.medilabofrontapp.bean.PatientBean;
 
-@FeignClient(name = "microservice-gateway", url = "localhost:8081", contextId = "microservice-gateway")
+@FeignClient(name = "microservice-gateway", url = "${microservice-gateway.url}", contextId = "microservice-gateway")
 public interface MicroservicePatientProxy {
 	
 	@GetMapping("/ms-patient/patient/patients")
