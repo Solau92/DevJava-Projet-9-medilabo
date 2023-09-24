@@ -19,6 +19,9 @@ public class SpringCloudConfig {
 
 	@Value("${microservice-patient.uri}")
 	private String msPatientUri;
+	
+	@Value("${microservice-note.uri}")
+	private String msNoteUri;
 
 	@Bean
 	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
@@ -32,6 +35,9 @@ public class SpringCloudConfig {
 				.route(r -> r.path("/auth/login")
 						.filters(f -> f.rewritePath("/auth/login", "/login"))
 						.uri(msGatewayUri))
+				.route(r -> r.path("/ms-note/note/**")
+						.filters(f -> f.rewritePath("/ms-note/note/(?<segment>.*)", "/note/${segment}"))
+						.uri(msNoteUri))
 				.build();	
 	}
 

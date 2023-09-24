@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.AuthenticationProxy;
+import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
 
 import feign.FeignException;
@@ -28,6 +30,8 @@ public class ClientController {
 	private final MicroservicePatientProxy patientsProxy;
 
 	private final AuthenticationProxy authenticationProxy;
+	
+	private final MicroserviceNoteProxy noteProxy;
 
 	private static final Logger log = LoggerFactory.getLogger(ClientController.class);
 
@@ -35,9 +39,10 @@ public class ClientController {
 
 	private String url;
 
-	public ClientController(MicroservicePatientProxy patientsProxy, AuthenticationProxy authenticationProxy) {
+	public ClientController(MicroservicePatientProxy patientsProxy, AuthenticationProxy authenticationProxy, MicroserviceNoteProxy noteProxy) {
 		this.patientsProxy = patientsProxy;
 		this.authenticationProxy = authenticationProxy;
+		this.noteProxy = noteProxy;
 		this.loggedUser = new User();
 		resetUrl();
 	}
@@ -150,7 +155,27 @@ public class ClientController {
 			return "addPatient";
 		}
 	}
+	
+	@GetMapping("/patient/view/{id}")
+	public String viewPatient(@PathVariable int id, Model model) {
 
+		if (this.loggedUser.getUsername() == null || this.loggedUser.getPassword() == null) {
+			log.info("logged User null");
+			return "redirect:/";
+		}
+
+		String authHeader = setAuthHeader();
+		
+		PatientBean patient = patientsProxy.getPatient(authHeader, id);
+		model.addAttribute("patient", patient);
+		
+		List<NoteBean> notes = noteProxy.getNotes(authHeader, id);
+		model.addAttribute("notes", notes);
+
+		log.info("Patient notes : " + notes.toString());
+		return "viewPatient";
+	}
+	
 	@GetMapping("/patient/update/{id}")
 	public String updatePatientForm(@PathVariable int id, Model model) {
 
@@ -221,6 +246,129 @@ public class ClientController {
 		}
 		return "redirect:/patient/patients";
 	}
+	
+	@GetMapping("/note/add/{patientId}")
+	public String addNoteForm(@PathVariable("patientId") int id, Model model) {
+
+		if (this.loggedUser.getUsername() == null || this.loggedUser.getPassword() == null) {
+			log.info("logged User null");
+			this.url = "/note/add";
+			return "redirect:/";
+		}
+		
+		String authHeader = setAuthHeader();
+
+		PatientBean patient = patientsProxy.getPatient(authHeader, id);
+		model.addAttribute("patient", patient);
+		model.addAttribute("user", this.loggedUser);
+		NoteBean note = new NoteBean();
+		model.addAttribute("note", note);
+		note.setPatientId(id);
+		log.info("patientId note form : " + note.getPatientId());
+		return "addNote";
+	}
+	
+	@PostMapping("/note/validate")
+	public String validateNote(@Valid @ModelAttribute("note") NoteBean note, BindingResult result, Model model) {
+
+		log.info("patientId validate : " + note.getPatientId());
+
+		if (result.hasErrors()) {
+			log.error("Result has error in addNote");
+			return "addNote";
+		}
+
+		String authHeader = setAuthHeader();
+
+		try {
+			noteProxy.addNote(authHeader, note);
+			resetUrl();
+			return "redirect:/patient/view/" + note.getPatientId();
+		} catch (FeignException e) {
+
+			if (e.status() == 401) {
+				log.info("Exception status : {}", e.status());
+				this.url = "/note/add";
+				return "redirect:/";
+			}
+			return "addNote";
+		}
+	}
+	
+	
+	@GetMapping("/note/update/{id}")
+	public String updateNotetForm(@PathVariable String id, Model model) {
+
+		if (this.loggedUser.getUsername() == null || this.loggedUser.getPassword() == null) {
+			log.info("logged User null");
+			return "redirect:/";
+		}
+
+		String authHeader = setAuthHeader();
+		NoteBean note = noteProxy.getNote(authHeader, id);
+		model.addAttribute("note", note);
+		return "updateNote";
+	}
+	
+	
+	@PostMapping("/note/validateUpdate/{id}")
+	public String updateNote(@PathVariable("id") String id, @Valid @ModelAttribute("note") NoteBean note,
+			BindingResult result, Model model) {
+
+		log.info("in validate update");
+
+		if (result.hasErrors()) {
+			log.error("Result has error in updatePatient");
+			return "updateNote";
+		}
+
+		note.setId(id);
+
+		String authHeader = setAuthHeader();
+
+		try {
+			log.info("before updating note");
+			noteProxy.updateNote(authHeader, note);
+			log.info("after updating note");
+			resetUrl();
+			return "redirect:/patient/patients"; ///////////
+		} catch (FeignException e) {
+
+			log.info("statut : {} message : {}", e.status(), e.getMessage());
+			model.addAttribute(("error"), e.getLocalizedMessage());
+
+			if (e.status() == 401) {
+				log.info("Exception status : {}", e.status());
+				this.url = "/patient/validateUpdate/" + id;
+				return "updatePatient";
+			}
+
+		}
+		return "redirect:/patient/patients"; ////////////////
+	}
+	
+	@GetMapping("/note/delete/{id}")
+	public String deleteNote(@PathVariable("id") String id, @Valid @ModelAttribute("note") NoteBean note,
+			BindingResult result, Model model) {
+
+		String authHeader = setAuthHeader();
+		
+		log.info(note.toString());
+		int patientId = note.getPatientId();
+
+		try {
+			noteProxy.deleteNote(authHeader, note);
+			resetUrl();
+		} catch (FeignException e) {
+			if (e.status() == 401) {
+				this.url = "/patient/patients";
+				return "redirect:/";
+			}
+		}
+		log.info("patient id de la note :" + patientId);
+		return "redirect:/patient/view/" + patientId; // A revoir, pas bon 
+	}
+	
 
 ///////////////////////////// private methods ///////////////////////////// 
 

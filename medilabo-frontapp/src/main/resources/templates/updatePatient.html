@@ -32,7 +32,8 @@
 			</div>
 
 			<div class="ligne">
-				<label class="formulaire">Last Name</label> <input
+				<label class="formulaire">Last Name</label> 
+				<input
 					class="form-control" id="lastName" name="lastName"
 					placeholder="Enter last name" type="text" th:field="*{lastName}" />
 				<p th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></p>
