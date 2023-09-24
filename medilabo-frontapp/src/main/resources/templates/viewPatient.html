@@ -14,7 +14,9 @@
 	<h1>View patient :</h1>
 	
 	<h2>Patient information :</h2>
-
+	
+	    <a th:href="@{/patient/update/{id}(id=${patient.id})}"}>Edit</a>
+	<!--  -->
         <div>
             First name :  <span th:text="${patient.firstName}"></span>
         </div>
