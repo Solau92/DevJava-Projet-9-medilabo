@@ -13,17 +13,9 @@
 
 	<h1>New note :</h1>
 
-	<div th:object="${patient}">
-
+ <div>
 		<form method="post" role="form" th:action="@{/note/validate}"
 			th:object="${note}">
-
- 			<div hidden=true>
-				<label class="formulaire">Patient id</label> <input
-					class="form-control" id="patientId" name="patientId"
-					th:field="${note.patientId}" type="text" />
-			</div>
-
 
 			<p th:if="${error}" th:text="${error}"></p>
 

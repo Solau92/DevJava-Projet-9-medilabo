@@ -33,7 +33,7 @@ public class AuthenticationController {
 	
 	@GetMapping("/")
 	public String loginForm(Model model) {
-		model.addAttribute("user", context.loggedUser);
+		model.addAttribute("user", context.getLoggedUser());
 		return "login";
 	}
 
@@ -51,17 +51,17 @@ public class AuthenticationController {
 
 		try {
 			authenticationProxy.login(authHeader);
-			context.loggedUser.setUsername(user.getUsername());
-			context.loggedUser.setPassword(user.getPassword());
+			context.getLoggedUser().setUsername(user.getUsername());
+			context.getLoggedUser().setPassword(user.getPassword());
 
 		} catch (FeignException e) {
 			log.info("Exception status login : {}", e.status());
 			if (e.status() == 401) {
-				context.url = "/";
+				context.setUrl("/");
 			}
 		}
 
-		String urlTempo = context.url;
+		String urlTempo = context.getUrl();
 		context.resetUrl();
 		return "redirect:" + urlTempo;
 	}

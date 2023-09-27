@@ -12,64 +12,60 @@
 <body>
 
 	<h1>View patient :</h1>
-	
-	<h2>Patient information :</h2>
-	
-	    <a th:href="@{/patient/update/{id}(id=${patient.id})}"}>Edit</a>
-	<!--  -->
-        <div>
-            First name :  <span th:text="${patient.firstName}"></span>
-        </div>
 
-        <div>
-            Last name :  <span th:text="${patient.lastName}"></span>
-        </div>
-        
-         <div>
-            Data of birth :  <span th:text="${patient.dateOfBirth}"></span>
-        </div>
-        
-        <div>
-            Gender :  <span th:text="${patient.gender}"></span>
-        </div>
-        
-        <div>
-            Address :  <span th:text="${patient.address}"></span>
-        </div>
-        
-        <div>
-            Phone number :  <span th:text="${patient.phoneNumber}"></span>
-        </div>
+	<h2>Patient information :</h2>
+
+	<a th:href="@{/patient/update/{id}(id=${patient.id})}"}>Edit</a>
+	<!--  -->
+	<div>
+		First name : <span th:text="${patient.firstName}"></span>
+	</div>
+
+	<div>
+		Last name : <span th:text="${patient.lastName}"></span>
+	</div>
+
+	<div>
+		Data of birth : <span th:text="${patient.dateOfBirth}"></span>
+	</div>
+
+	<div>
+		Gender : <span th:text="${patient.gender}"></span>
+	</div>
+
+	<div>
+		Address : <span th:text="${patient.address}"></span>
+	</div>
+
+	<div>
+		Phone number : <span th:text="${patient.phoneNumber}"></span>
+	</div>
 
 
 	<h2>Patient notes :</h2>
-	
-	<a th:href="@{/note/add/{patientId}(patientId=${patient.id})}" class="btn btn-primary btn-sm">Add note</a>
-	
-	
+
+	<a th:href="@{/note/add/{patientId}(patientId=${patient.id})}"
+		class="btn btn-primary btn-sm">Add note</a>
+
+
 	<table class="table table-bordered">
-    <thead>
-    <tr>
-        <th scope="col">date</th>
-        <th scope="col">content</th>
-		<th scope="col">patientId</th>
-        
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="note : ${notes}">
-        <td th:text="${note.date}"></td>
-        <td th:text="${note.content}"></td>
-		<td th:text="${note.patientId}"></td>
-      <td>
-            <a th:href="@{/note/view/{id}(id=${note.id})}">View</a>
-           	<a th:href="@{/note/update/{id}(id=${note.id})}">Edit</a>
-            <a th:href="@{/note/delete/{id}(id=${note.id})}">Delete</a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-	
+		<thead>
+			<tr>
+				<th scope="col">date</th>
+				<th scope="col">content</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="note : ${notes}">
+				<td th:text="${note.date}"></td>
+				<td th:text="${note.content}"></td>
+				<td><a th:href="@{/note/view/{id}(id=${note.id})}">View</a> <a
+					th:href="@{/note/update/{id}(id=${note.id})}">Edit</a> <a
+					th:href="@{/note/delete/{id}(id=${note.id})}">Delete</a></td>
+			</tr>
+		</tbody>
+	</table>
+
 	<h2>Patient diabeth risk :</h2>
 
 

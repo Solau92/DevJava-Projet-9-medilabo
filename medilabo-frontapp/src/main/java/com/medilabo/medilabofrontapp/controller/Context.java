@@ -13,17 +13,54 @@ public class Context {
 
 	private static final Logger log = LoggerFactory.getLogger(Context.class);
 
-	public User loggedUser;
+	private User loggedUser;
 
-	public String url;
+	private String url;
 	
-	public int patientId;
+	private int patientId;
 	
 	public Context() {
 		this.loggedUser = new User();
 		this.url = "/index";
 	}
 	
+	/**
+	 * @return the loggedUser
+	 */
+	public User getLoggedUser() {
+		return loggedUser;
+	}
+
+	/**
+	 * @param loggedUser the loggedUser to set
+	 */
+	public void setLoggedUser(User loggedUser) {
+		this.loggedUser = loggedUser;
+	}
+
+
+	/**
+	 * @return the patientId
+	 */
+	public int getPatientId() {
+		return patientId;
+	}
+
+	/**
+	 * @param patientId the patientId to set
+	 */
+	public void setPatientId(int patientId) {
+		this.patientId = patientId;
+	}
+
+	/**
+	 * @return the url
+	 */
+	public String getUrl() {
+		return url;
+	}
+
+
 	public void setUrl(String url) {
 		this.url = url;
 	}
@@ -39,6 +76,10 @@ public class Context {
 		String authHeader = "Basic " + new String(encodedBytes);
 		log.info("authHeader in setAuthHeader : {}", authHeader);
 		return authHeader;
+	}
+	
+	public void resetPatientId() {
+		this.patientId = 0;
 	}
 	
 }

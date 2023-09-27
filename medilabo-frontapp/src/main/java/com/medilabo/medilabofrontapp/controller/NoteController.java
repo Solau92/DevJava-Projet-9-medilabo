@@ -39,28 +39,22 @@ public class NoteController {
 	@GetMapping("/note/add/{patientId}")
 	public String addNoteForm(@PathVariable("patientId") int id, Model model) {
 
-		if (context.loggedUser.getUsername() == null || context.loggedUser.getPassword() == null) {
+		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
-			context.url = "/note/add";
+			context.setUrl("/note/add");
 			return "redirect:/";
 		}
 
 		String authHeader = context.setAuthHeader();
-
-		PatientBean patient = patientProxy.getPatient(authHeader, id);
-		model.addAttribute("patient", patient);
-		model.addAttribute("user", context.loggedUser);
+		
+		model.addAttribute("user", context.getLoggedUser());
 		NoteBean note = new NoteBean();
 		model.addAttribute("note", note);
-		note.setPatientId(id);
-		log.info("patientId note form : " + note.getPatientId());
 		return "addNote";
 	}
 
 	@PostMapping("/note/validate")
 	public String validateNote(@Valid @ModelAttribute("note") NoteBean note, BindingResult result, Model model) {
-
-		log.info("patientId validate : " + note.getPatientId());
 
 		if (result.hasErrors()) {
 			log.error("Result has error in addNote");
@@ -70,14 +64,17 @@ public class NoteController {
 		String authHeader = context.setAuthHeader();
 
 		try {
+
+			note.setPatientId(context.getPatientId());
+			log.info("patientId validate : " + note.getPatientId());
 			noteProxy.addNote(authHeader, note);
 			context.resetUrl();
-			return "redirect:/patient/view/" + context.patientId;
+			return "redirect:/patient/view/" + context.getPatientId();
 		} catch (FeignException e) {
 
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
-				context.url = "/note/add";
+				context.setUrl("/note/add");
 				return "redirect:/";
 			}
 			return "addNote";
@@ -87,7 +84,7 @@ public class NoteController {
 	@GetMapping("/note/update/{id}")
 	public String updateNotetForm(@PathVariable String id, Model model) {
 
-		if (context.loggedUser.getUsername() == null || context.loggedUser.getPassword() == null) {
+		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
 			return "redirect:/";
 		}
@@ -109,16 +106,14 @@ public class NoteController {
 			return "updateNote";
 		}
 
-		note.setId(id);
 
 		String authHeader = context.setAuthHeader();
 
 		try {
-			log.info("before updating note");
+			note.setPatientId(context.getPatientId());
 			noteProxy.updateNote(authHeader, note);
-			log.info("after updating note");
 			context.resetUrl();
-			return "redirect:/patient/view/" + context.patientId;
+			return "redirect:/patient/view/" + context.getPatientId();
 		} catch (FeignException e) {
 
 			log.info("statut : {} message : {}", e.status(), e.getMessage());
@@ -126,12 +121,12 @@ public class NoteController {
 
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
-				context.url = "/patient/validateUpdate/" + context.patientId;
+				context.setUrl("/patient/validateUpdate/" + context.getPatientId());
 				return "updatePatient";
 			}
 
 		}
-		return "redirect:/patient/view/" + context.patientId;
+		return "redirect:/patient/view/" + context.getPatientId();
 	}
 
 	@GetMapping("/note/delete/{id}")
@@ -140,7 +135,6 @@ public class NoteController {
 
 		String authHeader = context.setAuthHeader();
 
-		log.info(note.toString());
 		int patientId = note.getPatientId();
 
 		try {
@@ -148,11 +142,11 @@ public class NoteController {
 			context.resetUrl();
 		} catch (FeignException e) {
 			if (e.status() == 401) {
-				context.url = "/patient/patients";
+				context.setUrl("/patient/patients");
 				return "redirect:/";
 			}
 		}
-		return "redirect:/patient/view/" + context.patientId; // A revoir, pas bon
+		return "redirect:/patient/view/" + context.getPatientId(); 
 	}
 
 }

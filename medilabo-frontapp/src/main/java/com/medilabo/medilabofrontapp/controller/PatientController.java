@@ -39,7 +39,7 @@ public class PatientController {
 	}
 	
 	@RequestMapping("/patient/patients")
-	public String index(Model model) {
+	public String patientList(Model model) {
 
 		String authHeader = context.setAuthHeader();
 		List<PatientBean> patients;
@@ -48,13 +48,15 @@ public class PatientController {
 			patients = patientProxy.patients(authHeader);
 			model.addAttribute("patients", patients);
 			context.resetUrl();
+			context.resetPatientId();
 			return "patients";
+			
 		} catch (FeignException e) {
 
 			log.info("Exception status : {}", e.status());
 
 			if (e.status() == 401) {
-				context.url = "/patient/patients";
+				context.setUrl("/patient/patients");
 			}
 			return "redirect:/";
 		}
@@ -63,16 +65,15 @@ public class PatientController {
 	@GetMapping("/patient/view/{id}")
 	public String viewPatient(@PathVariable int id, Model model) {
 
-		if (context.loggedUser.getUsername() == null || context.loggedUser.getPassword() == null) {
+		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
 			return "redirect:/";
 		}
 
 		String authHeader = context.setAuthHeader();
 
-		context.patientId = id;
+		context.setPatientId(id);
 		
-		// Utile ? 
 		PatientBean patient = patientProxy.getPatient(authHeader, id);
 		model.addAttribute("patient", patient);
 
@@ -81,18 +82,19 @@ public class PatientController {
 
 		log.info("Patient notes : " + notes.toString());
 		return "viewPatient";
+
 	}
 	
 	@GetMapping("/patient/add")
 	public String addPatientForm(Model model) {
 
-		if (context.loggedUser.getUsername() == null || context.loggedUser.getPassword() == null) {
+		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
-			context.url = "/patient/add";
+			context.setUrl("/patient/add");
 			return "redirect:/";
 		}
 
-		model.addAttribute("user", context.loggedUser);
+		model.addAttribute("user", context.getLoggedUser());
 		PatientBean patient = new PatientBean();
 		model.addAttribute("patient", patient);
 		return "addPatient";
@@ -116,7 +118,7 @@ public class PatientController {
 
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
-				context.url = "/patient/add";
+				context.setUrl("/patient/add");
 				return "redirect:/";
 			}
 
@@ -133,7 +135,7 @@ public class PatientController {
 	@GetMapping("/patient/update/{id}")
 	public String updatePatientForm(@PathVariable int id, Model model) {
 
-		if (context.loggedUser.getUsername() == null || context.loggedUser.getPassword() == null) {
+		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
 			return "redirect:/";
 		}
@@ -168,7 +170,7 @@ public class PatientController {
 
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
-				context.url = "/patient/validateUpdate/" + id;
+				context.setUrl("/patient/validateUpdate/" + id);
 				return "updatePatient";
 			}
 
@@ -194,7 +196,7 @@ public class PatientController {
 			context.resetUrl();
 		} catch (FeignException e) {
 			if (e.status() == 401) {
-				context.url = "/patient/patients";
+				context.setUrl("/patient/patients");
 				return "redirect:/";
 			}
 		}
