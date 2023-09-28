@@ -64,7 +64,6 @@ public class NoteController {
 		String authHeader = context.setAuthHeader();
 
 		try {
-
 			note.setPatientId(context.getPatientId());
 			log.info("patientId validate : " + note.getPatientId());
 			noteProxy.addNote(authHeader, note);
@@ -82,7 +81,7 @@ public class NoteController {
 	}
 
 	@GetMapping("/note/update/{id}")
-	public String updateNotetForm(@PathVariable String id, Model model) {
+	public String updateNoteForm(@PathVariable String id, Model model) {
 
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
@@ -122,7 +121,7 @@ public class NoteController {
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
 				context.setUrl("/patient/validateUpdate/" + context.getPatientId());
-				return "updatePatient";
+				return "updatePatient"; /// ?????????????? Patient ? 
 			}
 
 		}
@@ -140,6 +139,7 @@ public class NoteController {
 		try {
 			noteProxy.deleteNote(authHeader, note);
 			context.resetUrl();
+			return "redirect:/patient/view/" + context.getPatientId(); 
 		} catch (FeignException e) {
 			if (e.status() == 401) {
 				context.setUrl("/patient/patients");

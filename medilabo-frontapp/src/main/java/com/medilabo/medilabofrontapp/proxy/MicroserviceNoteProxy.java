@@ -26,7 +26,7 @@ public interface MicroserviceNoteProxy {
 	List<NoteBean> getNotes(@RequestHeader("Authorization") String header, @PathVariable("patientId") int patientId);
 
 	@PostMapping("/ms-note/note/validateUpdate")
-	PatientBean updateNote(@RequestHeader("Authorization") String header, @RequestBody NoteBean note);
+	NoteBean updateNote(@RequestHeader("Authorization") String header, @RequestBody NoteBean note);
 	
 	@DeleteMapping("/ms-note/note/delete")
 	void deleteNote(@RequestHeader("Authorization") String header, @RequestBody NoteBean note);

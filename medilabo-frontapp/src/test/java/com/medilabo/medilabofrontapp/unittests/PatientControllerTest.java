@@ -13,6 +13,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -30,6 +32,7 @@ import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
 
 import feign.FeignException;
 import feign.FeignException.Unauthorized;
+import feign.Request;
 
 @SpringBootTest
 class PatientControllerTest {
@@ -204,16 +207,18 @@ class PatientControllerTest {
 	///////////////////////////
 	@Test
 	void addPatientValidate_Forbidden_Test() {
-
+		
 		// GIVEN
-		when(context.setAuthHeader()).thenReturn(wrongHeader);
-		when(patientProxy.addPatient(any(String.class), any(PatientBean.class))).thenThrow(Unauthorized.class);
+		when(context.setAuthHeader()).thenReturn(header);
+		when(patientProxy.addPatient(any(String.class), any(PatientBean.class))).thenThrow(FeignException.Unauthorized.class);
 
 		// WHEN
 		String result = patientController.validate(patient1, bResult, model);
-
+//		Exception exceptionThrown = assertThrows(FeignException.Unauthorized.class, () -> patientController.validate(patient1, bResult, model));
+	
 		// THEN
 		assertEquals("redirect:/", result);
+//		assertTrue(exceptionThrown.getMessage().contains("401"));
 
 	}
 

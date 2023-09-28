@@ -116,6 +116,8 @@ public class PatientController {
 			return "redirect:/patient/patients";
 		} catch (FeignException e) {
 
+			log.info("feignException status : " + e.status() + " message : "+  e.getMessage());
+			
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
 				context.setUrl("/patient/add");
