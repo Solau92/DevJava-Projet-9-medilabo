@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.medilabo.medilabofrontapp.bean.DiabetesRiskBean;
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
+import com.medilabo.medilabofrontapp.proxy.MicroserviceRiskProxy;
 import com.medilabo.medilabofrontapp.service.PatientService;
 
 import feign.FeignException;
@@ -36,9 +38,12 @@ public class PatientController {
 	
 	private final MicroserviceNoteProxy noteProxy;
 	
-	public PatientController(MicroservicePatientProxy patientProxy, MicroserviceNoteProxy noteProxy, Context context) {
+	private final MicroserviceRiskProxy riskProxy;
+	
+	public PatientController(MicroservicePatientProxy patientProxy, MicroserviceNoteProxy noteProxy, MicroserviceRiskProxy riskProxy, Context context) {
 		this.patientProxy = patientProxy;
 		this.noteProxy = noteProxy;
+		this.riskProxy = riskProxy;
 		this.context = context;
 	}
 	
@@ -111,6 +116,9 @@ public class PatientController {
 
 		List<NoteBean> notes = noteProxy.getNotes(authHeader, id);
 		model.addAttribute("notes", notes);
+		
+		DiabetesRiskBean risk = riskProxy.getDiabetesRisk(authHeader, id);
+		model.addAttribute("risk", risk);
 
 		log.info("Patient notes : " + notes.toString());
 		return "viewPatient";

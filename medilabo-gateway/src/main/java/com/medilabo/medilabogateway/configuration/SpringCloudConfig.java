@@ -22,6 +22,9 @@ public class SpringCloudConfig {
 	
 	@Value("${microservice-note.uri}")
 	private String msNoteUri;
+	
+	@Value("${microservice-risk.uri}")
+	private String msRiskUri;
 
 	@Bean
 	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
@@ -36,6 +39,9 @@ public class SpringCloudConfig {
 				.route(r -> r.path("/ms-note/note/**")
 						.filters(f -> f.rewritePath("/ms-note/note/(?<segment>.*)", "/note/${segment}"))
 						.uri(msNoteUri))
+				.route(r -> r.path("/ms-risk/risk/**")
+						.filters(f -> f.rewritePath("/ms-risk/risk/(?<segment>.*)", "/risk/${segment}"))
+						.uri(msRiskUri))
 				.build();	
 	}
 

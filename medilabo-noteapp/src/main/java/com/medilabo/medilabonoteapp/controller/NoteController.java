@@ -21,10 +21,10 @@ import com.medilabo.medilabonoteapp.service.NoteService;
 @Controller
 public class NoteController {
 	
-	private NoteService noteService;
-	
 	private static final Logger log = LoggerFactory.getLogger(NoteController.class);
 
+	private NoteService noteService;
+	
 	public NoteController(NoteService noteService) {
 		this.noteService = noteService;
 	}
@@ -35,7 +35,7 @@ public class NoteController {
 	 * @return
 	 */
 	@GetMapping("/note/notes/{patientId}")
-	public ResponseEntity<List<Note>> findByPatientId(@PathVariable int patientId, @RequestHeader("Authorization") String header) {
+	public ResponseEntity<List<Note>> findByPatientId(@RequestHeader("Authorization") String header, @PathVariable int patientId) {
 		log.info("/note/notes/{} : Getting the list of all notes for patient {}", patientId, patientId);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(noteService.findByPatientId(patientId));
 	}
