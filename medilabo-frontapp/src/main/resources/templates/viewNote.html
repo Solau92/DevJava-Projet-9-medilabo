@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Update note</title>
+<title>View note</title>
 <link rel="stylesheet" type="text/css"
 	href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
 
@@ -11,7 +11,7 @@
 
 <body>
 
-	<h1>Update note :</h1>
+	<h1>View note :</h1>
 
 	<div th:object="${patient}">
 
@@ -32,15 +32,13 @@
 				<label class="formulaire">Content</label>
 				<textarea rows="10"
 				class="form-control" id="content" name="content"
-					placeholder="Enter content" th:field="*{content}"></textarea>
-				<!-- 				<input
-					class="form-control" id="content" name="content"
-					placeholder="Enter content" th:field="*{content}" type="text" /> -->
+					placeholder="Enter content" th:field="*{content}" readonly="readonly"></textarea>
 			</div>
 
 			<div>
-				<button type="submit">Udpdate</button>
-
+			
+				<a th:href="@{/patient/view/{patientId}(patientId=${note.patientId})}">Back to patient</a>
+			
 			</div>
 
 		</form>

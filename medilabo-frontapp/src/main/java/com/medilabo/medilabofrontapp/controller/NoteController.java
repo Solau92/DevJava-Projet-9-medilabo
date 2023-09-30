@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
+import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
 
@@ -35,6 +36,19 @@ public class NoteController {
 		this.context = context;
 	}
 	
+	@GetMapping("/note/view/{id}")
+	public String viewNote(@PathVariable String id, Model model) {
+
+		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
+			log.info("logged User null");
+			return "redirect:/";
+		}
+
+		String authHeader = context.setAuthHeader();
+		NoteBean note = noteProxy.getNote(authHeader, id);
+		model.addAttribute("note", note);
+		return "viewNote";
+	} 
 	
 	@GetMapping("/note/add/{patientId}")
 	public String addNoteForm(@PathVariable("patientId") int id, Model model) {
@@ -133,8 +147,6 @@ public class NoteController {
 			BindingResult result, Model model) {
 
 		String authHeader = context.setAuthHeader();
-
-		int patientId = note.getPatientId();
 
 		try {
 			noteProxy.deleteNote(authHeader, note);

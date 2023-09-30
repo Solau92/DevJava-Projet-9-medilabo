@@ -57,6 +57,7 @@ public class NoteServiceImpl implements NoteService {
 	 */
 	@Override
 	public Note save(Note note) {
+		log.info("Saving note : " + note);
 		return noteRepository.save(note);
 	}
 	

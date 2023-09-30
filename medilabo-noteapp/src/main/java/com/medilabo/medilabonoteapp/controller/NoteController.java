@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.medilabo.medilabonoteapp.entity.Note;
 import com.medilabo.medilabonoteapp.exception.NoteNotFoundException;
@@ -34,7 +35,7 @@ public class NoteController {
 	 * @return
 	 */
 	@GetMapping("/note/notes/{patientId}")
-	public ResponseEntity<List<Note>> findByPatientId(@PathVariable int patientId) {
+	public ResponseEntity<List<Note>> findByPatientId(@PathVariable int patientId, @RequestHeader("Authorization") String header) {
 		log.info("/note/notes/{} : Getting the list of all notes for patient {}", patientId, patientId);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(noteService.findByPatientId(patientId));
 	}
@@ -45,7 +46,7 @@ public class NoteController {
 	 * @return
 	 */
 	@PostMapping("/note/validate")
-	public ResponseEntity<Note> addNote(@RequestBody Note note){
+	public ResponseEntity<Note> addNote(@RequestBody Note note, @RequestHeader("Authorization") String header){
 		log.info("/note/validate : Adding note {} for patient {}", note.getContent(), note.getPatientId());
 		return ResponseEntity.status(HttpStatus.CREATED).body(noteService.save(note));
 	}
@@ -57,7 +58,7 @@ public class NoteController {
 	 * @throws NoteNotFoundException
 	 */
 	@PostMapping("/note/validateUpdate")
-	public ResponseEntity<Note> updateNote(@RequestBody Note note) throws NoteNotFoundException {
+	public ResponseEntity<Note> updateNote(@RequestBody Note note, @RequestHeader("Authorization") String header) throws NoteNotFoundException {
 
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(noteService.update(note));
 	}
@@ -69,7 +70,7 @@ public class NoteController {
 	 * @throws NoteNotFoundException
 	 */
 	@DeleteMapping("/note/delete")
-	public ResponseEntity<Void> deleteNote(@RequestBody Note note) throws NoteNotFoundException {
+	public ResponseEntity<Void> deleteNote(@RequestBody Note note, @RequestHeader("Authorization") String header) throws NoteNotFoundException {
 		log.info("/patient/delete : Deleting note {} for patient {}", note.getId(), note.getPatientId());
 		noteService.delete(note);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -82,7 +83,7 @@ public class NoteController {
 	 * @throws NoteNotFoundException
 	 */
 	@GetMapping("/note/{id}")
-	public ResponseEntity<Note> getNote(@PathVariable String id) throws NoteNotFoundException {
+	public ResponseEntity<Note> getNote(@PathVariable String id, @RequestHeader("Authorization") String header) throws NoteNotFoundException {
 
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(noteService.findById(id));
 	}

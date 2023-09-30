@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
+import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
+import com.medilabo.medilabofrontapp.service.PatientService;
 
 import feign.FeignException;
 import jakarta.validation.Valid;
@@ -28,6 +30,8 @@ public class PatientController {
 	
 	private static Context context;
 	
+//	private PatientService patientService;
+	
 	private final MicroservicePatientProxy patientProxy;
 	
 	private final MicroserviceNoteProxy noteProxy;
@@ -37,6 +41,12 @@ public class PatientController {
 		this.noteProxy = noteProxy;
 		this.context = context;
 	}
+	
+//	public PatientController(PatientService patientService, MicroserviceNoteProxy noteProxy, Context context) {
+//		this.patientService = patientService;
+//		this.noteProxy = noteProxy;
+//		this.context = context;
+//	}
 	
 	@RequestMapping("/patient/patients")
 	public String patientList(Model model) {
@@ -61,6 +71,28 @@ public class PatientController {
 			return "redirect:/";
 		}
 	}
+	
+//	@RequestMapping("/patient/patients")
+//	public String patientList(Model model) {
+//
+//		String authHeader = context.setAuthHeader();
+//		List<PatientBean> patients;
+//
+//		try {
+//			patients = patientService.getPatients(authHeader);
+//			model.addAttribute("patients", patients);			
+//			return "patients";
+//			
+//		} catch (FeignException e) {
+//
+//			log.info("Exception status : {}", e.status());
+//
+//			if (e.status() == 401) {
+//				context.setUrl("/patient/patients");
+//			}
+//			return "redirect:/";
+//		}
+//	}
 	
 	@GetMapping("/patient/view/{id}")
 	public String viewPatient(@PathVariable int id, Model model) {

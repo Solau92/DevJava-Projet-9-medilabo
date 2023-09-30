@@ -20,6 +20,16 @@ public class Note {
 	
 	private String content;
 
+	
+	public Note() {
+	}
+
+	public Note(@NotNull int patientId, LocalDate date, String content) {
+		this.patientId = patientId;
+		this.date = date;
+		this.content = content;
+	}
+
 	/**
 	 * @return the id
 	 */

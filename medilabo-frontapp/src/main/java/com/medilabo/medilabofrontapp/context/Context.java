@@ -1,4 +1,4 @@
-package com.medilabo.medilabofrontapp.controller;
+package com.medilabo.medilabofrontapp.context;
 
 import java.util.Base64;
 

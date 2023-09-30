@@ -20,9 +20,13 @@
 			<p th:if="${error}" th:text="${error}"></p>
 
 			<div class="ligne">
-				<label class="formulaire">Content</label> <input
+				<label class="formulaire">Content</label> 
+				<textarea rows="10"
 					class="form-control" id="content" name="content"
-					placeholder="Enter content" th:field="*{content}" type="text" />
+					placeholder="Enter content" th:field="*{content}"></textarea>
+				<!-- <input
+					class="form-control" id="content" name="content"
+					placeholder="Enter content" th:field="*{content}" type="text" /> -->
 			</div>
 
 			<div>

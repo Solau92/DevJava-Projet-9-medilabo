@@ -59,8 +59,9 @@
 			<tr th:each="note : ${notes}">
 				<td th:text="${note.date}"></td>
 				<td th:text="${note.content}"></td>
-				<td><a th:href="@{/note/view/{id}(id=${note.id})}">View</a> <a
-					th:href="@{/note/update/{id}(id=${note.id})}">Edit</a> <a
+				<td>
+ 				<a th:href="@{/note/view/{id}(id=${note.id})}">View</a> 
+				<a th:href="@{/note/update/{id}(id=${note.id})}">Edit</a> <a
 					th:href="@{/note/delete/{id}(id=${note.id})}">Delete</a></td>
 			</tr>
 		</tbody>

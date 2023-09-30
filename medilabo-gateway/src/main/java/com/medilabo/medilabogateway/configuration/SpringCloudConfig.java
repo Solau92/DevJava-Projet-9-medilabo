@@ -25,9 +25,7 @@ public class SpringCloudConfig {
 
 	@Bean
 	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
-		
-		log.info("read properties: " + msPatientUri + " " + msGatewayUri);
-		
+				
 		return builder.routes()
 				.route(r -> r.path("/ms-patient/patient/**")
 						.filters(f -> f.rewritePath("/ms-patient/patient/(?<segment>.*)", "/patient/${segment}"))
