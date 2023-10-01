@@ -40,10 +40,8 @@ public class DiabetesRiskController {
 	public ResponseEntity<DiabetesRisk> getDiabetesRisk(@RequestHeader("Authorization") String header, @PathVariable int patientId) {
 		
 		PatientBean patient = patientProxy.getPatient(header, patientId);
-		log.info(patient.toString());
 		
 		List<NoteBean> notes = noteProxy.getNotes(header, patientId);
-		log.info(notes.toString());
 
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(riskService.calculateRisk(patient, notes));		
 	}

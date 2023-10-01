@@ -21,10 +21,10 @@ public class Data {
 	@PostConstruct
 	private void insertData() {
 		
-		Note note11 = new Note(1, LocalDate.now().minusWeeks(1), "Note 1.1");
+		Note note11 = new Note(1, LocalDate.now().minusWeeks(1), "Hémoglobine A1C, Taille, Vertiges");
 		noteService.save(note11);
 		
-		Note note12 = new Note(1, LocalDate.now().minusDays(1), "Note 1.2");
+		Note note12 = new Note(1, LocalDate.now().minusDays(1), "Anticorps");
 		noteService.save(note12);
 		
 		Note note21 = new Note(2, LocalDate.now().minusMonths(1), "Note 2.1");
