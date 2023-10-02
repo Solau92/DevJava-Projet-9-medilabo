@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.medilabo.medilabofrontapp.bean.DiabetesRiskBean;
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
+import com.medilabo.medilabofrontapp.constants.HTMLPageName;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
@@ -64,7 +65,7 @@ public class PatientController {
 			model.addAttribute("patients", patients);
 			context.resetUrl();
 			context.resetPatientId();
-			return "patients";
+			return HTMLPageName.PATIENTS;
 			
 		} catch (FeignException e) {
 
@@ -121,7 +122,7 @@ public class PatientController {
 		model.addAttribute("risk", risk);
 
 		log.info("Patient notes : " + notes.toString());
-		return "viewPatient";
+		return HTMLPageName.VIEW_PATIENT;
 
 	}
 	
@@ -137,7 +138,7 @@ public class PatientController {
 		model.addAttribute("user", context.getLoggedUser());
 		PatientBean patient = new PatientBean();
 		model.addAttribute("patient", patient);
-		return "addPatient";
+		return HTMLPageName.ADD_PATIENT;
 	}
 
 	@PostMapping("/patient/validate")
@@ -145,7 +146,7 @@ public class PatientController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in addPatient");
-			return "addPatient";
+			return HTMLPageName.ADD_PATIENT;
 		}
 
 		String authHeader = context.setAuthHeader();
@@ -168,9 +169,9 @@ public class PatientController {
 				log.info("Exception status : {}", e.status());
 				String message = "A patient with the same firstName, lastName and dateOfBirth already exists";
 				model.addAttribute(("error"), message);
-				return "addPatient";
+				return HTMLPageName.ADD_PATIENT;
 			}
-			return "addPatient";
+			return HTMLPageName.ADD_PATIENT;
 		}
 	}
 	
@@ -185,7 +186,7 @@ public class PatientController {
 		String authHeader = context.setAuthHeader();
 		PatientBean patient = patientProxy.getPatient(authHeader, id);
 		model.addAttribute("patient", patient);
-		return "updatePatient";
+		return HTMLPageName.UPDATE_PATIENT;
 	}
 
 	@PostMapping("/patient/validateUpdate/{id}")
@@ -194,7 +195,7 @@ public class PatientController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in updatePatient");
-			return "updatePatient";
+			return HTMLPageName.UPDATE_PATIENT;
 		}
 
 		patient.setId(id);
@@ -213,14 +214,14 @@ public class PatientController {
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
 				context.setUrl("/patient/validateUpdate/" + id);
-				return "updatePatient";
+				return HTMLPageName.UPDATE_PATIENT;
 			}
 
 			if (e.status() == 400) {
 				log.info("Exception status : {}", e.status());
 				String message = "A patient with the same firstName, lastName and dateOfBirth already exists";
 				model.addAttribute(("error"), message);
-				return "updatePatient";
+				return HTMLPageName.UPDATE_PATIENT;
 			}
 
 		}

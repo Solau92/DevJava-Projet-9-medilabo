@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.medilabo.medilabofrontapp.constants.HTMLPageName;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.AuthenticationProxy;
@@ -43,7 +44,7 @@ public class AuthenticationController {
 	@GetMapping("/")
 	public String loginForm(Model model) {
 		model.addAttribute("user", context.getLoggedUser());
-		return "login";
+		return HTMLPageName.LOGIN;
 	}
 
 	@PostMapping("/login")
@@ -51,7 +52,7 @@ public class AuthenticationController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in login");
-			return "login";
+			return HTMLPageName.LOGIN;
 		}
 
 		byte[] encodedBytes = Base64.getEncoder().encode((user.getUsername() + ":" + user.getPassword()).getBytes());
@@ -92,7 +93,7 @@ public class AuthenticationController {
 
 	@GetMapping("/index")
 	public String index() {
-		return "index";
+		return HTMLPageName.INDEX;
 	}
 
 }

@@ -23,6 +23,7 @@ services:
       MS_GATEWAY_URI: medilabo-gateway:8081
       MS_PATIENT_URI: medilabo-patientapp:8082
       MS_NOTE_URI: medilabo-noteapp:8083
+      MS_RISK_URI: medilabo-riskapp:8084
     networks:
       - medilabo_network
 
@@ -84,7 +85,19 @@ services:
       - medilabo_network
     volumes: 
        - mysqlmongodata:/var/lib/mongodb    
-    
+
+  medilabo-risk:
+    build: ./medilabo-riskapp
+    image: medilabo-riskapp
+    container_name: medilabo-riskapp
+    ports:
+      - 18084:8084
+    environment:
+      MS_PATIENT_URL: medilabo-patientapp:8082
+      MS_NOTE_URL: medilabo-noteapp:8083
+    networks:
+      - medilabo_network
+      
 networks:
   medilabo_network:
     driver: bridge

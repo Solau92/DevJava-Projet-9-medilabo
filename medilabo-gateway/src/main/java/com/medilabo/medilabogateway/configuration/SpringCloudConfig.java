@@ -45,28 +45,4 @@ public class SpringCloudConfig {
 				.build();	
 	}
 
-//	@Bean
-//	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
-//		return builder.routes()
-//				.route(r -> r.path("/patient/**")
-//						.filters(f -> f.filter(new LoggerFilter()))
-//                        .uri("http://localhost:8081/"))
-//				
-//                .build();
-//	}
-
-//	@Bean
-//	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
-//		return builder.routes()
-//				.route("r1", r -> r.host("r1")
-//						.and()
-//						.path("/path1")
-//						.uri("uri1"))
-//				.route("r2", r -> r.host("r2")
-//						.and()
-//						.path("/path2")
-//						.filters(f -> f.prefixPath("/prefix"))
-//						.uri("uri2"))
-//				.build();
-//	}
 }

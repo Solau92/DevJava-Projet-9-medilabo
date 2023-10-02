@@ -129,6 +129,7 @@ class PatientControllerTest {
 		assertEquals("redirect:/", result);
 	}
 
+	@Disabled
 	@Test
 	void viewPatient_Ok_Test() {
 

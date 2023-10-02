@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
+import com.medilabo.medilabofrontapp.constants.HTMLPageName;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
@@ -47,7 +48,7 @@ public class NoteController {
 		String authHeader = context.setAuthHeader();
 		NoteBean note = noteProxy.getNote(authHeader, id);
 		model.addAttribute("note", note);
-		return "viewNote";
+		return HTMLPageName.VIEW_NOTE;
 	} 
 	
 	@GetMapping("/note/add/{patientId}")
@@ -64,7 +65,7 @@ public class NoteController {
 		model.addAttribute("user", context.getLoggedUser());
 		NoteBean note = new NoteBean();
 		model.addAttribute("note", note);
-		return "addNote";
+		return HTMLPageName.ADD_NOTE;
 	}
 
 	@PostMapping("/note/validate")
@@ -72,7 +73,7 @@ public class NoteController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in addNote");
-			return "addNote";
+			return HTMLPageName.ADD_NOTE;
 		}
 
 		String authHeader = context.setAuthHeader();
@@ -90,7 +91,7 @@ public class NoteController {
 				context.setUrl("/note/add");
 				return "redirect:/";
 			}
-			return "addNote";
+			return HTMLPageName.ADD_NOTE;
 		}
 	}
 
@@ -105,7 +106,7 @@ public class NoteController {
 		String authHeader = context.setAuthHeader();
 		NoteBean note = noteProxy.getNote(authHeader, id);
 		model.addAttribute("note", note);
-		return "updateNote";
+		return HTMLPageName.UPDATE_NOTE;
 	}
 
 	@PostMapping("/note/validateUpdate/{id}")
@@ -116,7 +117,7 @@ public class NoteController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in updatePatient");
-			return "updateNote";
+			return HTMLPageName.UPDATE_NOTE;
 		}
 
 
