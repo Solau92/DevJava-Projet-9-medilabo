@@ -2,18 +2,18 @@ package com.medilabo.medilaboriskapp.model;
 
 public enum Triggers {
 
-	HEMOGLOBINE_A1C("Hémoglobine A1C"),  
-	MICROALBUMINE("Microalbumine"),
-	TAILLE("Taille"),
-	POIDS("Poids"),
-	FUMEUR("Fumeur"),
-	FUMEUSE("Fumeuse"),
-	ANORMAL("Anormal"),
-	CHOLESTEROL("Cholestérol"),
-	VERTIGES("Vertiges"),
-	RECHUTE("Rechute"),
-	REACTION("Réaction"),
-	ANTICORPS("Anticorps");
+	HEMOGLOBINE_A1C("hémoglobine A1C"),  
+	MICROALBUMINE("microalbumine"),
+	TAILLE("taille"),
+	POIDS("poids"),
+	FUMEUR("fumeur"),
+	FUMEUSE("fumeuse"),
+	ANORMAL("anormal"),
+	CHOLESTEROL("cholestérol"),
+	VERTIGES("vertiges"),
+	RECHUTE("rechute"),
+	REACTION("réaction"),
+	ANTICORPS("anticorps");
 
 	public final String label;
 

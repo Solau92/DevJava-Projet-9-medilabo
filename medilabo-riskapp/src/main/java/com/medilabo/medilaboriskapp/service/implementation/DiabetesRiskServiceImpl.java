@@ -44,7 +44,7 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 		// age < 30
 		} else {
 
-			if (gender.equals("H")) {
+			if (gender.equals("M")) {
 				switch (nbOfTriggers) {
 				case 0, 1, 2 -> risk.setRisk(RiskLevel.NONE);
 				case 3, 4 -> risk.setRisk(RiskLevel.IN_DANGER);
@@ -74,9 +74,11 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 			for (Triggers t : Triggers.values()) {
 				if (n.getContent().toLowerCase().contains(t.label.toLowerCase())) {
 					nbOfTriggers++;
+					log.info(t.label);
 				}
 			}
 		}
+		log.info("Number of triggers : " + nbOfTriggers);
 		return nbOfTriggers;
 	}
 

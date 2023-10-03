@@ -1,6 +1,5 @@
-INSERT INTO patient (firstName, lastName, dateOfBirth, gender, address, phoneNumber) VALUES 
-('Sophie', 'LAURENT', '1984-01-01', 'F', '92400 COURBEVOIE', '0123456789'),
-('Julien', 'DUPONT', '1985-09-22', 'M', '75001 PARIS', '0456712389'),
-('Marie', 'DURAND', '1932-11-30', 'F', '75017 PARIS', '0891234567'),
-('Marc', 'MARTIN', '1979-02-25', 'M', '75011 PARIS', '0567891234'),
-('Alain', 'THOMAS', '1981-06-10', 'Other', '75018 PARIS', '0345678912');
+INSERT INTO patient (firstName, lastName, dateOfBirth, gender, address, phoneNumber) VALUES
+('Test', 'TestNone', '1966-12-31', 'F', '1 Brookside St', '1002223333'),
+('Test', 'TestBorderline', '1945-06-24', 'M', '2 High St', '2003334444'),
+('Test', 'TestInDanger', '2004-06-18', 'M', '3 Club Road', '3004445555'),
+('Test', 'TestEarlyOnset', '2002-06-28', 'F', '4 Valley Dr', '4005556666');

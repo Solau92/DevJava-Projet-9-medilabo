@@ -4,8 +4,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Update patient</title>
-<link rel="stylesheet" type="text/css"
-	href="webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
+
 
 </head>
 
@@ -22,7 +22,7 @@
 			<p th:if="${error}" th:text="${error}"></p>
 
 			<div class="ligne">
-				<label class="formulaire">First Name</label> <input
+				<label class="formulaire">First name</label> <input
 					class="form-control" id="firstName" name="firstName"
 					placeholder="Enter first name" th:field="*{firstName}" type="text" />
 
@@ -32,7 +32,7 @@
 			</div>
 
 			<div class="ligne">
-				<label class="formulaire">Last Name</label> 
+				<label class="formulaire">Last name</label> 
 				<input
 					class="form-control" id="lastName" name="lastName"
 					placeholder="Enter last name" type="text" th:field="*{lastName}" />
@@ -40,7 +40,7 @@
 			</div>
 
 			<div class="ligne">
-				<label class="formulaire">Date of Birth</label> <input
+				<label class="formulaire">Date of birth</label> <input
 					class="form-control" id="dateOfBirth" name="dateOfBirth"
 					placeholder="Enter date of birth" type="date"
 					th:field="*{dateOfBirth}" />
@@ -53,7 +53,6 @@
 					th:field="*{gender}">
 					<option value="M">M</option>
 					<option value="F">F</option>
-					<option selected value="Other">Other</option>
 				</select>
 
 				<p th:errors="*{gender}" th:if="${#fields.hasErrors('gender')}"></p>
@@ -66,7 +65,7 @@
 			</div>
 
 			<div class="ligne">
-				<label class="formulaire">PhoneNumber</label> <input
+				<label class="formulaire">Phone number</label> <input
 					class="form-control" id="phoneNumber" name="phoneNumber"
 					placeholder="Enter phoneNumber" type="text"
 					th:field="*{phoneNumber}" />
@@ -75,7 +74,7 @@
 			</div>
 
 			<div>
-				<button type="submit">Update</button>
+				<button type="submit" class="btn btn-primary btn-sm">Update</button>
 			</div>
 
 		</form>

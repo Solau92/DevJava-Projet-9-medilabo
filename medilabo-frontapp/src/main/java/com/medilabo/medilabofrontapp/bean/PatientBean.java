@@ -13,13 +13,13 @@ public class PatientBean {
 
 	private int id;
 	
-	@NotBlank(message = "firstName cannot be empty")
+	@NotBlank(message = "First name cannot be empty")
 	private String firstName;
 	
-	@NotBlank(message = "lastName cannot be empty")
+	@NotBlank(message = "Last name cannot be empty")
 	private String lastName;
 
-	@NotNull(message = "dateOfBirth cannot be empty")
+	@NotNull(message = "Date of birth cannot be empty")
 	@Past
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private LocalDate dateOfBirth;
@@ -29,7 +29,7 @@ public class PatientBean {
 	
 	private String address;
 		
-	@Pattern(regexp="(^$|[0-9]{10})", message = "phoneNumber must contain ten digits")
+	@Pattern(regexp="(^$|[0-9]{10})", message = "Phone number must contain ten digits")
 	private String phoneNumber;
 
 	public PatientBean() {

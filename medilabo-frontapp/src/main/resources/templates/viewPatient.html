@@ -4,18 +4,19 @@
 <head>
 <meta charset="UTF-8">
 <title>View patient</title>
-<link rel="stylesheet" type="text/css"
-	href="webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
 
 </head>
 
 <body>
 
 	<h1>View patient :</h1>
+	
+	<br>
 
 	<h2>Patient information :</h2>
 
-	<a th:href="@{/patient/update/{id}(id=${patient.id})}">Edit</a>
+	<a th:href="@{/patient/update/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Edit</a>
 	<!--  -->
 	<div>
 		First name : <span th:text="${patient.firstName}"></span>
@@ -26,7 +27,7 @@
 	</div>
 
 	<div>
-		Data of birth : <span th:text="${patient.dateOfBirth}"></span>
+		Date of birth : <span th:text="${patient.dateOfBirth}"></span>
 	</div>
 
 	<div>
@@ -41,6 +42,8 @@
 		Phone number : <span th:text="${patient.phoneNumber}"></span>
 	</div>
 
+	<br>
+
 
 	<h2>Patient notes :</h2>
 
@@ -50,8 +53,8 @@
 	<table class="table table-bordered">
 		<thead>
 			<tr>
-				<th scope="col">date</th>
-				<th scope="col">content</th>
+				<th scope="col">Date</th>
+				<th scope="col">Content</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -66,14 +69,17 @@
 		</tbody>
 	</table>
 
+	<br>
+
 	<h2>Patient diabetes risk :</h2>
 	
 	<div>
 		Diabetes risk : <span th:text="${risk.risk}"></span>
 	</div>
 
+	<br>
 
-	<a href="/patient/patients">Back to list of patients</a>
+	<a href="/patient/patients" class="btn btn-primary btn-sm">Back to list of patients</a>
 
 
 </body>

@@ -18,9 +18,9 @@
 			<label class="formulaire"> Username</label> <input type="text"
 				id="username" name="username" class="form-control"
 				th:field="*{username}" placeholder="Enter username" />
-			<p th:errors="*{username}" th:if="${#fields.hasErrors('username')}"></p>			
-			
-			
+			<p th:errors="*{username}" th:if="${#fields.hasErrors('username')}"></p>
+
+
 		</div>
 
 		<div class="ligne">
@@ -28,6 +28,10 @@
 				id="password" name="password" class="form-control"
 				th:field="*{password}" placeholder="Enter password" />
 			<p th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></p>
+		</div>
+
+		<div>
+			<div class="text-alert" th:text="${message}"></div>
 		</div>
 
 		<div>

@@ -7,10 +7,10 @@ import jakarta.validation.constraints.NotBlank;
 @Component
 public class User {
 
-	@NotBlank(message = "username cannot be empty")
+	@NotBlank(message = "Username cannot be empty")
 	private String username;
 	
-	@NotBlank(message = "password cannot be empty")
+	@NotBlank(message = "Password cannot be empty")
 	private String password;
 	
 

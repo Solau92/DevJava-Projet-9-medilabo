@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.medilabo.medilabofrontapp.bean.DiabetesRiskBean;
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
-import com.medilabo.medilabofrontapp.constants.HTMLPageName;
+import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceRiskProxy;
-import com.medilabo.medilabofrontapp.service.PatientService;
 
 import feign.FeignException;
 import jakarta.validation.Valid;
@@ -65,7 +65,7 @@ public class PatientController {
 			model.addAttribute("patients", patients);
 			context.resetUrl();
 			context.resetPatientId();
-			return HTMLPageName.PATIENTS;
+			return HTMLPage.PATIENTS;
 			
 		} catch (FeignException e) {
 
@@ -74,7 +74,7 @@ public class PatientController {
 			if (e.status() == 401) {
 				context.setUrl("/patient/patients");
 			}
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class PatientController {
 
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 
 		String authHeader = context.setAuthHeader();
@@ -122,7 +122,7 @@ public class PatientController {
 		model.addAttribute("risk", risk);
 
 		log.info("Patient notes : " + notes.toString());
-		return HTMLPageName.VIEW_PATIENT;
+		return HTMLPage.VIEW_PATIENT;
 
 	}
 	
@@ -132,13 +132,13 @@ public class PatientController {
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
 			context.setUrl("/patient/add");
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 
 		model.addAttribute("user", context.getLoggedUser());
 		PatientBean patient = new PatientBean();
 		model.addAttribute("patient", patient);
-		return HTMLPageName.ADD_PATIENT;
+		return HTMLPage.ADD_PATIENT;
 	}
 
 	@PostMapping("/patient/validate")
@@ -146,7 +146,7 @@ public class PatientController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in addPatient");
-			return HTMLPageName.ADD_PATIENT;
+			return HTMLPage.ADD_PATIENT;
 		}
 
 		String authHeader = context.setAuthHeader();
@@ -154,7 +154,7 @@ public class PatientController {
 		try {
 			patientProxy.addPatient(authHeader, patient);
 			context.resetUrl();
-			return "redirect:/patient/patients";
+			return Redirect.PATIENTS;
 		} catch (FeignException e) {
 
 			log.info("feignException status : " + e.status() + " message : "+  e.getMessage());
@@ -162,16 +162,16 @@ public class PatientController {
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
 				context.setUrl("/patient/add");
-				return "redirect:/";
+				return Redirect.HOME;
 			}
 
 			if (e.status() == 400) {
 				log.info("Exception status : {}", e.status());
 				String message = "A patient with the same firstName, lastName and dateOfBirth already exists";
 				model.addAttribute(("error"), message);
-				return HTMLPageName.ADD_PATIENT;
+				return HTMLPage.ADD_PATIENT;
 			}
-			return HTMLPageName.ADD_PATIENT;
+			return HTMLPage.ADD_PATIENT;
 		}
 	}
 	
@@ -180,13 +180,13 @@ public class PatientController {
 
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 
 		String authHeader = context.setAuthHeader();
 		PatientBean patient = patientProxy.getPatient(authHeader, id);
 		model.addAttribute("patient", patient);
-		return HTMLPageName.UPDATE_PATIENT;
+		return HTMLPage.UPDATE_PATIENT;
 	}
 
 	@PostMapping("/patient/validateUpdate/{id}")
@@ -195,7 +195,7 @@ public class PatientController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in updatePatient");
-			return HTMLPageName.UPDATE_PATIENT;
+			return HTMLPage.UPDATE_PATIENT;
 		}
 
 		patient.setId(id);
@@ -205,7 +205,7 @@ public class PatientController {
 		try {
 			patientProxy.updatePatient(authHeader, patient);
 			context.resetUrl();
-			return "redirect:/patient/patients";
+			return Redirect.PATIENTS;
 		} catch (FeignException e) {
 
 			log.info("statut : {} message : {}", e.status(), e.getMessage());
@@ -214,18 +214,18 @@ public class PatientController {
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
 				context.setUrl("/patient/validateUpdate/" + id);
-				return HTMLPageName.UPDATE_PATIENT;
+				return HTMLPage.UPDATE_PATIENT;
 			}
 
 			if (e.status() == 400) {
 				log.info("Exception status : {}", e.status());
 				String message = "A patient with the same firstName, lastName and dateOfBirth already exists";
 				model.addAttribute(("error"), message);
-				return HTMLPageName.UPDATE_PATIENT;
+				return HTMLPage.UPDATE_PATIENT;
 			}
 
 		}
-		return "redirect:/patient/patients";
+		return Redirect.PATIENTS;
 	}
 
 	@GetMapping("/patient/delete/{id}")
@@ -240,10 +240,10 @@ public class PatientController {
 		} catch (FeignException e) {
 			if (e.status() == 401) {
 				context.setUrl("/patient/patients");
-				return "redirect:/";
+				return Redirect.HOME;
 			}
 		}
-		return "redirect:/patient/patients";
+		return Redirect.PATIENTS;
 	}
 	
 }

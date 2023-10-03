@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
-import com.medilabo.medilabofrontapp.constants.HTMLPageName;
+import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
@@ -42,13 +43,13 @@ public class NoteController {
 
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 
 		String authHeader = context.setAuthHeader();
 		NoteBean note = noteProxy.getNote(authHeader, id);
 		model.addAttribute("note", note);
-		return HTMLPageName.VIEW_NOTE;
+		return HTMLPage.VIEW_NOTE;
 	} 
 	
 	@GetMapping("/note/add/{patientId}")
@@ -57,7 +58,7 @@ public class NoteController {
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
 			context.setUrl("/note/add");
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 
 		String authHeader = context.setAuthHeader();
@@ -65,7 +66,7 @@ public class NoteController {
 		model.addAttribute("user", context.getLoggedUser());
 		NoteBean note = new NoteBean();
 		model.addAttribute("note", note);
-		return HTMLPageName.ADD_NOTE;
+		return HTMLPage.ADD_NOTE;
 	}
 
 	@PostMapping("/note/validate")
@@ -73,7 +74,7 @@ public class NoteController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in addNote");
-			return HTMLPageName.ADD_NOTE;
+			return HTMLPage.ADD_NOTE;
 		}
 
 		String authHeader = context.setAuthHeader();
@@ -83,15 +84,15 @@ public class NoteController {
 			log.info("patientId validate : " + note.getPatientId());
 			noteProxy.addNote(authHeader, note);
 			context.resetUrl();
-			return "redirect:/patient/view/" + context.getPatientId();
+			return Redirect.VIEW_PATIENT + context.getPatientId();
 		} catch (FeignException e) {
 
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
 				context.setUrl("/note/add");
-				return "redirect:/";
+				return Redirect.HOME;
 			}
-			return HTMLPageName.ADD_NOTE;
+			return HTMLPage.ADD_NOTE;
 		}
 	}
 
@@ -100,13 +101,13 @@ public class NoteController {
 
 		if (context.getLoggedUser().getUsername() == null || context.getLoggedUser().getPassword() == null) {
 			log.info("logged User null");
-			return "redirect:/";
+			return Redirect.HOME;
 		}
 
 		String authHeader = context.setAuthHeader();
 		NoteBean note = noteProxy.getNote(authHeader, id);
 		model.addAttribute("note", note);
-		return HTMLPageName.UPDATE_NOTE;
+		return HTMLPage.UPDATE_NOTE;
 	}
 
 	@PostMapping("/note/validateUpdate/{id}")
@@ -117,7 +118,7 @@ public class NoteController {
 
 		if (result.hasErrors()) {
 			log.error("Result has error in updatePatient");
-			return HTMLPageName.UPDATE_NOTE;
+			return HTMLPage.UPDATE_NOTE;
 		}
 
 
@@ -127,7 +128,7 @@ public class NoteController {
 			note.setPatientId(context.getPatientId());
 			noteProxy.updateNote(authHeader, note);
 			context.resetUrl();
-			return "redirect:/patient/view/" + context.getPatientId();
+			return Redirect.VIEW_PATIENT + context.getPatientId();
 		} catch (FeignException e) {
 
 			log.info("statut : {} message : {}", e.status(), e.getMessage());
@@ -140,7 +141,7 @@ public class NoteController {
 			}
 
 		}
-		return "redirect:/patient/view/" + context.getPatientId();
+		return Redirect.VIEW_PATIENT + context.getPatientId();
 	}
 
 	@GetMapping("/note/delete/{id}")
@@ -152,14 +153,14 @@ public class NoteController {
 		try {
 			noteProxy.deleteNote(authHeader, note);
 			context.resetUrl();
-			return "redirect:/patient/view/" + context.getPatientId(); 
+			return Redirect.VIEW_PATIENT + context.getPatientId(); 
 		} catch (FeignException e) {
 			if (e.status() == 401) {
 				context.setUrl("/patient/patients");
-				return "redirect:/";
+				return Redirect.HOME;
 			}
 		}
-		return "redirect:/patient/view/" + context.getPatientId(); 
+		return Redirect.VIEW_PATIENT + context.getPatientId(); 
 	}
 
 }
