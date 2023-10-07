@@ -38,7 +38,6 @@ public class PatientController {
 	
 	private RiskServiceImpl riskService;
 	
-
 	public PatientController(PatientServiceImpl patientService, NoteServiceImpl noteService,
 			RiskServiceImpl riskService, Context context) {
 		this.patientService = patientService;

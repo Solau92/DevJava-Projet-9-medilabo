@@ -36,7 +36,7 @@ public class NoteServiceImpl implements NoteService{
 		try {
 			note.setPatientId(context.getPatientId());
 			log.info("patientId validate : " + note.getPatientId());
-			noteProxy.addNote(header, note);
+			noteAdded = noteProxy.addNote(header, note);
 			context.resetUrl();
 			context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 			
@@ -69,7 +69,7 @@ public class NoteServiceImpl implements NoteService{
 		
 		try {
 			note.setPatientId(context.getPatientId());
-			noteProxy.updateNote(header, note);
+			noteUpdated = noteProxy.updateNote(header, note);
 			context.resetUrl();
 			context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 			

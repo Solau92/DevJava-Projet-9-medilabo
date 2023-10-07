@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
-import com.medilabo.medilabofrontapp.bean.PatientBean;
 
 @FeignClient(name = "microservice-gateway", url = "${microservice-gateway.url}", contextId = "microservice-note")
 public interface MicroserviceNoteProxy {

@@ -94,7 +94,7 @@ public class PatientBean {
 
 	@Override
 	public String toString() {
-		return "PatientBean{" +
+		return "PatientBean [" +
 				"id=" + id +
 				", firstName='" + firstName + '\'' +
 				", lastName='" + lastName + '\'' +
@@ -102,6 +102,7 @@ public class PatientBean {
 				", gender='" + gender + '\'' +
 				", address=" + address + '\'' +
 				", phoneNumber=" + phoneNumber +
-				'}';
+				']';
 	}
+	
 }

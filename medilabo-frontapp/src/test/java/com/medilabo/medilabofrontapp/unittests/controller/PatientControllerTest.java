@@ -1,4 +1,4 @@
-package com.medilabo.medilabofrontapp.unittests;
+package com.medilabo.medilabofrontapp.unittests.controller;
 
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -25,11 +25,18 @@ import org.springframework.validation.BindingResult;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
 import com.medilabo.medilabofrontapp.bean.PatientBean;
+import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.controller.PatientController;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
+import com.medilabo.medilabofrontapp.service.NoteService;
+import com.medilabo.medilabofrontapp.service.PatientService;
+import com.medilabo.medilabofrontapp.service.implementation.NoteServiceImpl;
+import com.medilabo.medilabofrontapp.service.implementation.PatientServiceImpl;
+import com.medilabo.medilabofrontapp.service.implementation.RiskServiceImpl;
 
 import feign.FeignException;
 import feign.FeignException.Unauthorized;
@@ -42,11 +49,14 @@ class PatientControllerTest {
 	private PatientController patientController;
 
 	@Mock
-	private MicroservicePatientProxy patientProxy;
+	private PatientServiceImpl patientService;
 
 	@Mock
-	private MicroserviceNoteProxy noteProxy;
+	private NoteServiceImpl noteService;
 
+	@Mock
+	private RiskServiceImpl riskService;
+	
 	@Mock
 	private Context context;
 
@@ -106,13 +116,14 @@ class PatientControllerTest {
 
 		// GIVEN
 		when(context.setAuthHeader()).thenReturn(header);
-		when(patientProxy.patients(any(String.class))).thenReturn(patients);
+		when(patientService.getPatients(any(String.class))).thenReturn(patients);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.PATIENTS);
 
 		// WHEN
 		String result = patientController.patientList(model);
 
 		// THEN
-		assertEquals("patients", result);
+		assertEquals(HTMLPage.PATIENTS, result);
 	}
 
 	@Test
@@ -120,31 +131,31 @@ class PatientControllerTest {
 
 		// GIVEN
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
-		when(patientProxy.patients(any(String.class))).thenThrow(Unauthorized.class);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.HOME);
 
 		// WHEN
 		String result = patientController.patientList(model);
 
 		// THEN
-		assertEquals("redirect:/", result);
+		assertEquals(HTMLPage.HOME, result);
 	}
 
-	@Disabled
 	@Test
 	void viewPatient_Ok_Test() {
 
 		// GIVEN
 		when(context.getLoggedUser()).thenReturn(loggedUser);
 		when(context.setAuthHeader()).thenReturn(header);
-		when(patientProxy.getPatient(any(String.class), anyInt())).thenReturn(patient1);
-		when(noteProxy.getNotes(any(String.class), anyInt())).thenReturn(notes);
+		when(patientService.getPatient(any(String.class), anyInt())).thenReturn(patient1);
+		when(noteService.getNotes(any(String.class), anyInt())).thenReturn(notes);
+		when(riskService.getDiabetesRisk(any(String.class), anyInt())).thenReturn(null);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.PATIENTS);
 
 		// WHEN
 		String result = patientController.viewPatient(1, model);
 
 		// THEN
-		assertEquals("viewPatient", result);
-
+		assertEquals(HTMLPage.PATIENTS, result);
 	}
 
 	@Test
@@ -153,14 +164,14 @@ class PatientControllerTest {
 		// GIVEN
 		when(context.getLoggedUser()).thenReturn(notLoggedUser);
 		when(context.setAuthHeader()).thenReturn(header);
-		when(patientProxy.getPatient(any(String.class), anyInt())).thenReturn(patient1);
-		when(noteProxy.getNotes(any(String.class), anyInt())).thenReturn(notes);
+		when(patientService.getPatient(any(String.class), anyInt())).thenReturn(patient1);
+		when(noteService.getNotes(any(String.class), anyInt())).thenReturn(notes);
 
 		// WHEN
 		String result = patientController.viewPatient(1, model);
 
 		// THEN
-		assertEquals("redirect:/", result);
+		assertEquals(Redirect.HOME, result);
 
 	}
 
@@ -174,7 +185,7 @@ class PatientControllerTest {
 		String result = patientController.addPatientForm(model);
 
 		// THEN
-		assertEquals("addPatient", result);
+		assertEquals(HTMLPage.ADD_PATIENT, result);
 
 	}
 
@@ -188,8 +199,7 @@ class PatientControllerTest {
 		String result = patientController.addPatientForm(model);
 
 		// THEN
-		assertEquals("redirect:/", result);
-
+		assertEquals(Redirect.HOME, result);
 	}
 
 	@Test
@@ -198,13 +208,14 @@ class PatientControllerTest {
 		// GIVEN
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(header);
-		when(patientProxy.addPatient(any(String.class), any(PatientBean.class))).thenReturn(patient1);
+		when(patientService.addPatient(any(String.class), any(PatientBean.class))).thenReturn(patient1);
+		when(context.getReturnUrl()).thenReturn(Redirect.PATIENTS);
 
 		// WHEN
 		String result = patientController.validate(patient1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/patients", result);
+		assertEquals(Redirect.PATIENTS, result);
 	}
 	
 	@Test
@@ -217,44 +228,37 @@ class PatientControllerTest {
 		String result = patientController.validate(patient1, bResult, model);
 
 		// THEN
-		assertEquals("addPatient", result);
+		assertEquals(HTMLPage.ADD_PATIENT, result);
 	}
 
-	///////////////////////////
-	@Disabled
 	@Test
 	void addPatientValidate_Forbidden_Test() {
 		
 		// GIVEN
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(header);
-		when(patientProxy.addPatient(any(String.class), any(PatientBean.class))).thenThrow(FeignException.Unauthorized.class);
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
 
 		// WHEN
 		String result = patientController.validate(patient1, bResult, model);
-//		Exception exceptionThrown = assertThrows(FeignException.Unauthorized.class, () -> patientController.validate(patient1, bResult, model));
 	
 		// THEN
-		assertEquals("redirect:/", result);
-//		assertTrue(exceptionThrown.getMessage().contains("401"));
-
+		assertEquals(Redirect.HOME, result);
 	}
 
-	///////////////////////////
-	@Disabled
 	@Test
 	void addPatientValidate_PatientAlreadyExists_Test() {
 
 		// GIVEN
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
-		when(patientProxy.addPatient(header, patient1)).thenThrow(FeignException.class);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.ADD_PATIENT);
 
 		// WHEN
 		String result = patientController.validate(patient1, bResult, model);
 
 		// THEN
-		assertEquals("addPatient", result);
+		assertEquals(HTMLPage.ADD_PATIENT, result);
 	}
 
 	@Test
@@ -262,13 +266,13 @@ class PatientControllerTest {
 
 		// GIVEN
 		when(context.getLoggedUser()).thenReturn(loggedUser);
-		when(patientProxy.getPatient(any(String.class), anyInt())).thenReturn(patient1);
+		when(patientService.getPatient(any(String.class), anyInt())).thenReturn(patient1);
 
 		// WHEN
 		String result = patientController.updatePatientForm(1, model);
 
 		// THEN
-		assertEquals("updatePatient", result);
+		assertEquals(HTMLPage.UPDATE_PATIENT, result);
 	}
 
 	@Test
@@ -281,7 +285,7 @@ class PatientControllerTest {
 		String result = patientController.addPatientForm(model);
 
 		// THEN
-		assertEquals("redirect:/", result);
+		assertEquals(Redirect.HOME, result);
 	}
 
 	@Test
@@ -290,13 +294,15 @@ class PatientControllerTest {
 		// GIVEN
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(header);
-		when(patientProxy.updatePatient(any(String.class), any(PatientBean.class))).thenReturn(patient1);
+		when(patientService.updatePatient(any(String.class), any(PatientBean.class))).thenReturn(patient1);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.PATIENTS);
+
 
 		// WHEN
 		String result = patientController.updatePatient(1, patient1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/patients", result);
+		assertEquals(HTMLPage.PATIENTS, result);
 	}
 	
 	@Test
@@ -309,37 +315,37 @@ class PatientControllerTest {
 		String result = patientController.updatePatient(1, patient1, bResult, model);
 
 		// THEN
-		assertEquals("updatePatient", result);
+		assertEquals(HTMLPage.UPDATE_PATIENT, result);
 	}
 
-	//////////////////////////////////
-	@Disabled
 	@Test
 	void updatePatientValidate_Forbidden_Test() {
 
 		// GIVEN
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
-		when(patientProxy.updatePatient(any(String.class), any(PatientBean.class))).thenThrow(Unauthorized.class);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.UPDATE_PATIENT);
 
 		// WHEN
 		String result = patientController.updatePatient(1, patient1, bResult, model);
 
 		// THEN
-		assertEquals("updatePatient", result);
+		assertEquals(HTMLPage.UPDATE_PATIENT, result);
 	}
 
-	//////////////////////////////////
-	@Disabled
 	@Test
 	void updatePatientValidate_PatientAlreadyExists_Test() {
 
 		// GIVEN
+		when(bResult.hasErrors()).thenReturn(false);
+		when(context.setAuthHeader()).thenReturn(header);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.UPDATE_PATIENT);
 
 		// WHEN
+		String result = patientController.updatePatient(1, patient1, bResult, model);
 
 		// THEN
-		fail("not yet");
+		assertEquals(HTMLPage.UPDATE_PATIENT, result);
 
 	}
 
@@ -348,12 +354,13 @@ class PatientControllerTest {
 
 		// GIVEN
 		when(context.setAuthHeader()).thenReturn(header);
+		when(context.getReturnUrl()).thenReturn(Redirect.PATIENTS);
 
 		// WHEN
 		String result = patientController.deletePatient(1, patient1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/patients", result);
+		assertEquals(Redirect.PATIENTS, result);
 	}
 
 	@Test
@@ -361,14 +368,13 @@ class PatientControllerTest {
 
 		// GIVEN
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
-
-		doThrow(FeignException.Unauthorized.class).when(patientProxy).deletePatient(any(), any(PatientBean.class));
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
 
 		// WHEN
 		String result = patientController.deletePatient(1, patient1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/patients", result);
+		assertEquals(Redirect.HOME, result);
 	}
 
 }

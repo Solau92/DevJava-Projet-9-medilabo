@@ -1,4 +1,4 @@
-package com.medilabo.medilabofrontapp.unittests;
+package com.medilabo.medilabofrontapp.unittests.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -18,11 +18,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
+import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.controller.NoteController;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
+import com.medilabo.medilabofrontapp.service.implementation.NoteServiceImpl;
+import com.medilabo.medilabofrontapp.service.implementation.PatientServiceImpl;
 
 import feign.FeignException;
 
@@ -33,10 +37,10 @@ class NoteControllerTest {
 	private NoteController noteController;
 
 	@Mock
-	private MicroservicePatientProxy patientProxy;
+	private PatientServiceImpl patientService;
 
 	@Mock
-	private MicroserviceNoteProxy noteProxy;
+	private NoteServiceImpl noteService;
 
 	@Mock
 	private Context context;
@@ -77,6 +81,36 @@ class NoteControllerTest {
 	}
 
 	@Test
+	void viewNote_Ok_Test() {
+		
+		// GIVEN
+		when(context.getLoggedUser()).thenReturn(loggedUser);
+		when(context.setAuthHeader()).thenReturn(header);
+		when(context.getReturnUrl()).thenReturn(HTMLPage.VIEW_NOTE);
+
+		// WHEN
+		String result = noteController.viewNote("111111", model);
+
+		// THEN
+		assertEquals(HTMLPage.VIEW_NOTE, result);
+	}
+	
+	@Test
+	void viewNote_NotLogged_Test() {
+		
+		// GIVEN
+		when(context.getLoggedUser()).thenReturn(notLoggedUser);
+		when(context.setAuthHeader()).thenReturn(wrongHeader);
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
+
+		// WHEN
+		String result = noteController.viewNote("111111", model);
+
+		// THEN
+		assertEquals(Redirect.HOME, result);
+	}
+	
+	@Test
 	void addNoteForm_Ok_Test() {
 
 		// GIVEN
@@ -101,22 +135,24 @@ class NoteControllerTest {
 		String result = noteController.addNoteForm(1, model);
 
 		// THEN
-		assertEquals("redirect:/", result);
+		assertEquals(Redirect.HOME, result);
 	}
 	
 	@Test
 	void validateNote_Ok_Test() {
 
 		// GIVEN
+		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(header);
 		when(context.getPatientId()).thenReturn(1);
-		when(noteProxy.addNote(any(String.class), any(NoteBean.class))).thenReturn(note1);
+		when(noteService.addNote(any(String.class), any(NoteBean.class))).thenReturn(note1);
+		when(context.getReturnUrl()).thenReturn(Redirect.VIEW_PATIENT +"/1");
 
 		// WHEN
 		String result = noteController.validateNote(note1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/view/1", result);
+		assertEquals(Redirect.VIEW_PATIENT +"/1", result);
 	}
 	
 	@Test
@@ -129,11 +165,9 @@ class NoteControllerTest {
 		String result = noteController.validateNote(note1, bResult, model);
 
 		// THEN
-		assertEquals("addNote", result);
+		assertEquals(HTMLPage.ADD_NOTE, result);
 	}
 	
-	////////////////
-	@Disabled
 	@Test
 	void validateNote_Forbidden_Test() {
 
@@ -141,13 +175,13 @@ class NoteControllerTest {
 		when(context.getLoggedUser()).thenReturn(notLoggedUser);
 		when(context.getPatientId()).thenReturn(1);
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
-		when(noteProxy.addNote(any(String.class), any(NoteBean.class))).thenThrow(FeignException.class);
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
 
 		// WHEN
 		String result = noteController.validateNote(note1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/", result);
+		assertEquals(Redirect.HOME, result);
 	}
 	
 	@Test
@@ -156,13 +190,13 @@ class NoteControllerTest {
 		// GIVEN
 		when(context.getLoggedUser()).thenReturn(loggedUser);
 		when(context.setAuthHeader()).thenReturn(header);
-		when(noteProxy.getNote(any(String.class), any(String.class))).thenReturn(note1);
+		when(noteService.getNote(any(String.class), any(String.class))).thenReturn(note1);
 
 		// WHEN
 		String result = noteController.updateNoteForm("111111", model);
 
 		// THEN
-		assertEquals("updateNote", result);
+		assertEquals(HTMLPage.UPDATE_NOTE, result);
 	}
 	
 	@Test
@@ -175,7 +209,7 @@ class NoteControllerTest {
 		String result = noteController.updateNoteForm("111111", model);
 
 		// THEN
-		assertEquals("redirect:/", result);
+		assertEquals(Redirect.HOME, result);
 	}
 	
 	@Test
@@ -185,13 +219,14 @@ class NoteControllerTest {
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(header);
 		when(context.getPatientId()).thenReturn(1);
-		when(noteProxy.updateNote(any(String.class), any(NoteBean.class))).thenReturn(note1);
+		when(noteService.updateNote(any(String.class), any(NoteBean.class))).thenReturn(note1);
+		when(context.getReturnUrl()).thenReturn(Redirect.VIEW_PATIENT +"/1");
 
 		// WHEN
 		String result = noteController.updateNote("111111", note1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/view/1", result);
+		assertEquals(Redirect.VIEW_PATIENT +"/1", result);
 	}
 	
 	@Test
@@ -204,11 +239,9 @@ class NoteControllerTest {
 		String result = noteController.updateNote("111111", note1, bResult, model);
 
 		// THEN
-		assertEquals("updateNote", result);
+		assertEquals(HTMLPage.UPDATE_NOTE, result);
 	}
 	
-	/////////////////
-	@Disabled
 	@Test
 	void updateNote_Forbidden_Test() {
 		
@@ -216,13 +249,13 @@ class NoteControllerTest {
 		when(bResult.hasErrors()).thenReturn(false);
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
 		when(context.getPatientId()).thenReturn(1);
-		when(noteProxy.updateNote(any(String.class), any(NoteBean.class))).thenThrow(FeignException.class);
+		when(context.getReturnUrl()).thenReturn(Redirect.VIEW_PATIENT + "/1");
 
 		// WHEN
 		String result = noteController.updateNote("111111", note1, bResult, model);
 
 		// THEN
-		assertEquals("updatePatient", result);
+		assertEquals(Redirect.VIEW_PATIENT + "/1", result);
 	}
 	
 	@Test
@@ -232,11 +265,29 @@ class NoteControllerTest {
 		when(context.setAuthHeader()).thenReturn(header);
 		when(noteMock.getPatientId()).thenReturn(2);
 		when(context.getPatientId()).thenReturn(2);
+		when(context.getReturnUrl()).thenReturn(Redirect.VIEW_PATIENT + "/2");
 
 		// WHEN
 		String result = noteController.deleteNote("111111", note1, bResult, model);
 
 		// THEN
-		assertEquals("redirect:/patient/view/2", result);
+		assertEquals(Redirect.VIEW_PATIENT + "/2", result);
 	}
+	
+	@Test
+	void deleteNote_Forbidden_Test() {
+		
+		// GIVEN 
+		when(context.setAuthHeader()).thenReturn(header);
+		when(noteMock.getPatientId()).thenReturn(2);
+		when(context.getPatientId()).thenReturn(2);
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
+
+		// WHEN
+		String result = noteController.deleteNote("111111", note1, bResult, model);
+
+		// THEN
+		assertEquals(Redirect.HOME, result);
+	}
+	
 }

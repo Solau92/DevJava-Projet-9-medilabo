@@ -1,8 +1,12 @@
-package com.medilabo.medilabofrontapp.unittests;
+package com.medilabo.medilabofrontapp.unittests.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,9 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
+import com.medilabo.medilabofrontapp.constants.HTMLPage;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.controller.AuthenticationController;
 import com.medilabo.medilabofrontapp.model.User;
+import com.medilabo.medilabofrontapp.proxy.AuthenticationProxy;
 import com.medilabo.medilabofrontapp.service.implementation.AuthenticationServiceImpl;
 
 @SpringBootTest
@@ -30,6 +36,9 @@ class AuthenticationControllerTest {
 
 	@Mock
 	private AuthenticationServiceImpl authenticationService;
+	
+	@Mock
+	private AuthenticationProxy authenticationProxy;
 
 	@Mock
 	private Model model;
@@ -61,41 +70,40 @@ class AuthenticationControllerTest {
 		String result = authenticationController.loginForm(model);
 
 		// THEN
-		assertEquals("login", result);
+		assertEquals(HTMLPage.LOGIN, result);
 	}
 
-	@Disabled
 	@Test
 	void login_Ok_Test() {
 		
 		// GIVEN 
 		when(bResult.hasErrors()).thenReturn(false);
-		when(authenticationService.login(any(String.class), any(User.class))).thenReturn("/index");
+		when(context.getReturnUrl()).thenReturn(HTMLPage.INDEX);
 
 		// WHEN 
 		String result = authenticationController.login(new User(), bResult, model);
 		
 		// THEN 
-		assertEquals("/index", result);
+		verify(authenticationService, times(1)).login(any(String.class), any(User.class));
+		assertEquals(HTMLPage.INDEX, result);
+
+
 	}
 	
-	/// TODO
-	@Disabled
 	@Test
 	void login_Forbidden_Test() {
 		
 		// GIVEN 
 		when(bResult.hasErrors()).thenReturn(false);
-		when(authenticationService.login(any(String.class), any(User.class))).thenReturn("/");
+		when(context.getReturnUrl()).thenReturn(HTMLPage.HOME);
 
 		// WHEN 
 		String result = authenticationController.login(new User(), bResult, model);
 		
 		// THEN 
-		assertEquals("/", result);
+		assertEquals(HTMLPage.HOME, result);
 	}
 
-	@Disabled
 	@Test
 	void login_ResultHasError_Test() {
 

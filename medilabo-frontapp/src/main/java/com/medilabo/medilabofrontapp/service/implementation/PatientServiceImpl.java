@@ -84,7 +84,7 @@ public class PatientServiceImpl implements PatientService {
 
 			if (e.status() == 401) {
 				log.info("Exception status : {}", e.status());
-				context.setRedirectAfterExceptionUrl("/patient/add");
+				context.setRedirectAfterExceptionUrl(HTMLPage.ADD_PATIENT);
 				context.setReturnUrl(Redirect.HOME);
 			}
 
@@ -103,7 +103,7 @@ public class PatientServiceImpl implements PatientService {
 		PatientBean patientUpdated = new PatientBean();
 
 		try {
-			patientProxy.updatePatient(header, patient);
+			patientUpdated = patientProxy.updatePatient(header, patient);
 			context.resetUrl();
 			context.setReturnUrl(Redirect.PATIENTS);
 		} catch (FeignException e) {
@@ -135,7 +135,7 @@ public class PatientServiceImpl implements PatientService {
 			context.setReturnUrl(Redirect.PATIENTS);
 		} catch (FeignException e) {
 			if (e.status() == 401) {
-				context.setRedirectAfterExceptionUrl("/patient/patients");
+				context.setRedirectAfterExceptionUrl(HTMLPage.PATIENTS);
 				context.setReturnUrl(Redirect.HOME);
 			}
 		}

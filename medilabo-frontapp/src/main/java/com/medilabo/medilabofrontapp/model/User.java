@@ -13,7 +13,6 @@ public class User {
 	@NotBlank(message = "Password cannot be empty")
 	private String password;
 	
-
 	public User() {
 	
 	}
@@ -50,6 +49,5 @@ public class User {
 	public String toString() {
 		return "User [username=" + username + ", password=" + password + "]";
 	}
-	
 	
 }

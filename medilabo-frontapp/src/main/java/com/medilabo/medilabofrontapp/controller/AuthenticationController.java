@@ -14,10 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.medilabo.medilabofrontapp.constants.HTMLPage;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.model.User;
-import com.medilabo.medilabofrontapp.proxy.AuthenticationProxy;
 import com.medilabo.medilabofrontapp.service.implementation.AuthenticationServiceImpl;
 
-import feign.FeignException;
 import jakarta.validation.Valid;
 
 @Controller
@@ -29,7 +27,6 @@ public class AuthenticationController {
 
 	private AuthenticationServiceImpl authenticationService;
 
-
 	public AuthenticationController(AuthenticationServiceImpl authenticationService, Context context) {
 		this.authenticationService = authenticationService;
 		this.context = context;
@@ -38,6 +35,7 @@ public class AuthenticationController {
 
 	@GetMapping("/")
 	public String loginForm(Model model) {
+		log.info("login form");
 		model.addAttribute("user", context.getLoggedUser());
 		model.addAttribute("message", context.getMessage());
 		return HTMLPage.LOGIN;
@@ -53,16 +51,18 @@ public class AuthenticationController {
 
 		byte[] encodedBytes = Base64.getEncoder().encode((user.getUsername() + ":" + user.getPassword()).getBytes());
 		String authHeader = "Basic " + new String(encodedBytes);
-		log.info("authHeader in login : {}", authHeader);
 
 		model.addAttribute("message", context.getMessage());
 		authenticationService.login(authHeader, user);
 
+		log.info("user logged");
+
 		return context.getReturnUrl();
 	}
-	
+
 	@GetMapping("/index")
 	public String index() {
+		log.info("index page");
 		return HTMLPage.INDEX;
 	}
 

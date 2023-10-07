@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.medilabo.medilabofrontapp.constants.HTMLPage;
 import com.medilabo.medilabofrontapp.model.User;
 
 @Component
@@ -25,7 +26,7 @@ public class Context {
 	
 	public Context() {
 		this.loggedUser = new User();
-		this.redirectAfterExceptionUrl = "/index";
+		this.redirectAfterExceptionUrl = HTMLPage.INDEX;
 	}
 	
 	/**
@@ -41,7 +42,6 @@ public class Context {
 	public void setLoggedUser(User loggedUser) {
 		this.loggedUser = loggedUser;
 	}
-
 
 	/**
 	 * @return the patientId
@@ -64,15 +64,55 @@ public class Context {
 		return redirectAfterExceptionUrl;
 	}
 
-
+	/**
+	 * @param url the url to set
+	 */
 	public void setRedirectAfterExceptionUrl(String url) {
 		this.redirectAfterExceptionUrl = url;
 	}
 	
-	public void resetUrl() {
-		this.redirectAfterExceptionUrl = "/index";
+	/**
+	 * @return the url
+	 */
+	public String getReturnUrl() {
+		return returnUrl;
+	}
+
+	/**
+	 * @param url the url to set
+	 */
+	public void setReturnUrl(String returnUrl) {
+		this.returnUrl = returnUrl;
+	}
+
+	/**
+	 * 
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+
+	/**
+	 * 
+	 * @param message the message to set
+	 */
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
+	/**
+	 * Sets the redirectAfterExceptionUrl to index page 
+	 */
+	public void resetUrl() {
+		this.redirectAfterExceptionUrl = HTMLPage.INDEX;
+	}
+	
+	/**
+	 * Sets the authorization header with username and password.
+	 * 
+	 * @return the authorization header
+	 */
 	public String setAuthHeader() {
 		String username = this.loggedUser.getUsername();
 		String password = this.loggedUser.getPassword();
@@ -82,24 +122,11 @@ public class Context {
 		return authHeader;
 	}
 	
+	/**
+	 * Sets patient id to 0.
+	 */
 	public void resetPatientId() {
 		this.patientId = 0;
-	}
-
-	public String getReturnUrl() {
-		return returnUrl;
-	}
-
-	public void setReturnUrl(String returnUrl) {
-		this.returnUrl = returnUrl;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 	
 }

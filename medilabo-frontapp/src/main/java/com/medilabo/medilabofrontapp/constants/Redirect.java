@@ -1,5 +1,8 @@
 package com.medilabo.medilabofrontapp.constants;
-
+/**
+ * List of redirections used by controllers.
+ *
+ */
 public class Redirect {
 
 	public static final String HOME = "redirect:/";

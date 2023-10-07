@@ -41,6 +41,4 @@ public class DiabetesRiskBean {
 		return "DiabetesRiskBean [patientId=" + patientId + ", risk=" + risk + "]";
 	}
 	
-	
-
 }
