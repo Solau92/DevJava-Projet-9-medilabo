@@ -15,13 +15,17 @@ public class Context {
 
 	private User loggedUser;
 
-	private String url;
+	private String redirectAfterExceptionUrl;
+	
+	private String returnUrl;
+	
+	private String message;
 	
 	private int patientId;
 	
 	public Context() {
 		this.loggedUser = new User();
-		this.url = "/index";
+		this.redirectAfterExceptionUrl = "/index";
 	}
 	
 	/**
@@ -56,17 +60,17 @@ public class Context {
 	/**
 	 * @return the url
 	 */
-	public String getUrl() {
-		return url;
+	public String getRedirectAfterExceptionUrl() {
+		return redirectAfterExceptionUrl;
 	}
 
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setRedirectAfterExceptionUrl(String url) {
+		this.redirectAfterExceptionUrl = url;
 	}
 	
 	public void resetUrl() {
-		this.url = "/index";
+		this.redirectAfterExceptionUrl = "/index";
 	}
 	
 	public String setAuthHeader() {
@@ -80,6 +84,22 @@ public class Context {
 	
 	public void resetPatientId() {
 		this.patientId = 0;
+	}
+
+	public String getReturnUrl() {
+		return returnUrl;
+	}
+
+	public void setReturnUrl(String returnUrl) {
+		this.returnUrl = returnUrl;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
 	}
 	
 }

@@ -65,7 +65,7 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 		return risk;
 	}
 
-	private int numberOfTriggers(List<NoteBean> notes) {
+	public int numberOfTriggers(List<NoteBean> notes) {
 
 		int nbOfTriggers = 0;
 

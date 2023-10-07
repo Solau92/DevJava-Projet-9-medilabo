@@ -3,6 +3,8 @@ package com.medilabo.medilabonoteapp.data;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.medilabo.medilabonoteapp.entity.Note;
@@ -14,6 +16,8 @@ import jakarta.annotation.PostConstruct;
 @Component
 public class Data {
 	
+	private static final Logger log = LoggerFactory.getLogger(Data.class);
+
 	private NoteService noteService;
 	
 	public Data(NoteService noteService) {
@@ -45,6 +49,7 @@ public class Data {
 				
 		Note note11 = new Note(1, LocalDate.now(), "Le patient déclare qu'il 'se sent très bien' Poids égal ou inférieur au poids recommandé");
 		noteService.save(note11);
+		log.info("Dans Data : save note 11");
 		
 		Note note21 = new Note(2, LocalDate.now(), "Le patient déclare qu'il ressent beaucoup de stress au travail Il se plaint également que son audition est anormale dernièrement");
 		noteService.save(note21);

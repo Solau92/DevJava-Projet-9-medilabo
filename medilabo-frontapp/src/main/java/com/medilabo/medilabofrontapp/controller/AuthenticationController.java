@@ -15,7 +15,7 @@ import com.medilabo.medilabofrontapp.constants.HTMLPage;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.AuthenticationProxy;
-import com.medilabo.medilabofrontapp.service.AuthenticationService;
+import com.medilabo.medilabofrontapp.service.implementation.AuthenticationServiceImpl;
 
 import feign.FeignException;
 import jakarta.validation.Valid;
@@ -26,45 +26,22 @@ public class AuthenticationController {
 	private static final Logger log = LoggerFactory.getLogger(AuthenticationController.class);
 
 	private static Context context;
-	
-	private String message;
 
-//	private AuthenticationService authenticationService;
+	private AuthenticationServiceImpl authenticationService;
 
-	private final AuthenticationProxy authenticationProxy;
 
-	public AuthenticationController(AuthenticationProxy authenticationProxy, Context context) {
-		this.authenticationProxy = authenticationProxy;
+	public AuthenticationController(AuthenticationServiceImpl authenticationService, Context context) {
+		this.authenticationService = authenticationService;
 		this.context = context;
-		this.message = "";
+		context.setMessage("");
 	}
-
-//	public AuthenticationController(AuthenticationService authenticationService, Context context) {
-//		this.authenticationService = authenticationService;
-//		this.context = context;
-//	}
 
 	@GetMapping("/")
 	public String loginForm(Model model) {
 		model.addAttribute("user", context.getLoggedUser());
-		model.addAttribute("message", message);
+		model.addAttribute("message", context.getMessage());
 		return HTMLPage.LOGIN;
 	}
-
-//	@PostMapping("/login")
-//	public String login(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-//
-//		if (result.hasErrors()) {
-//			log.error("Result has error in login");
-//			return HTMLPage.LOGIN;
-//		}
-//
-//		byte[] encodedBytes = Base64.getEncoder().encode((user.getUsername() + ":" + user.getPassword()).getBytes());
-//		String authHeader = "Basic " + new String(encodedBytes);
-//		log.info("authHeader in login : {}", authHeader);
-//
-//		return authenticationService.login(authHeader, user);
-//	}
 
 	@PostMapping("/login")
 	public String login(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
@@ -78,24 +55,12 @@ public class AuthenticationController {
 		String authHeader = "Basic " + new String(encodedBytes);
 		log.info("authHeader in login : {}", authHeader);
 
-		try {
-			authenticationProxy.login(authHeader);
-			context.getLoggedUser().setUsername(user.getUsername());
-			context.getLoggedUser().setPassword(user.getPassword());
+		model.addAttribute("message", context.getMessage());
+		authenticationService.login(authHeader, user);
 
-		} catch (FeignException e) {
-			log.info("Exception status login : {}", e.status());
-			if (e.status() == 401) {
-				this.message = "Wrong username or password";
-				context.setUrl("/");
-			}
-		}
-
-		String urlTempo = context.getUrl();
-		context.resetUrl();
-		return "redirect:" + urlTempo;
+		return context.getReturnUrl();
 	}
-
+	
 	@GetMapping("/index")
 	public String index() {
 		return HTMLPage.INDEX;
