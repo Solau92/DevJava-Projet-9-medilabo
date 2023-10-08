@@ -30,6 +30,12 @@ public class PatientServiceImpl implements PatientService {
 		this.context = context;
 	}
 
+	/**
+	 * Returns the list of all patients from the patient app and database.
+	 * 
+	 * @param header corresponding to authorization header
+	 * @return List<PatientBean>
+	 */
 	@Override
 	public List<PatientBean> getPatients(String header) {
 
@@ -37,11 +43,14 @@ public class PatientServiceImpl implements PatientService {
 
 		try {
 			patients = patientProxy.patients(header);
+			log.debug(patients.toString());
 			context.resetUrl();
 			context.resetPatientId();
 			context.setReturnUrl(HTMLPage.PATIENTS);
 
 		} catch (FeignException e) {
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
+			
 			if (e.status() == 401) {
 				context.setRedirectAfterExceptionUrl(HTMLPage.PATIENTS);
 				context.setReturnUrl(HTMLPage.HOME);
@@ -50,6 +59,13 @@ public class PatientServiceImpl implements PatientService {
 		return patients;
 	}
 
+	/**
+	 * Returns a patient from the patient app and database, given its id.
+	 * 
+	 * @param header corresponding to authorization header
+	 * @param id
+	 * @return PatientBean
+	 */
 	@Override
 	public PatientBean getPatient(String header, int id) {
 
@@ -58,16 +74,25 @@ public class PatientServiceImpl implements PatientService {
 		try {
 			context.setPatientId(id);
 			patient = patientProxy.getPatient(header, id);
+			log.info("Patient found id : {}, lastname : {}", patient.getId(), patient.getLastName());
 			context.setReturnUrl(HTMLPage.VIEW_PATIENT);
+			
 		} catch (FeignException e) {
 			// TODO : Gerer PatientNotFoundException
-			log.info("Exception status : {}", e.status());
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 			context.setMessage("Patient with id {} not found" + id);
 			context.setReturnUrl(HTMLPage.PATIENTS);
 		}
 		return patient;
 	}
 
+	/**
+	 * Adds the given patient in the patient app and database. 
+	 * 
+	 * @param header corresponding to authorization header
+	 * @param patient
+	 * @return PatientBean corresponding to the patient added
+	 */
 	@Override
 	public PatientBean addPatient(String header, PatientBean patient) {
 
@@ -75,21 +100,20 @@ public class PatientServiceImpl implements PatientService {
 
 		try {
 			patientSaved = patientProxy.addPatient(header, patient);
+			log.info("Patient saved id : {}, lastname : {}", patientSaved.getId(), patientSaved.getLastName());
 			context.resetUrl();
 			context.setReturnUrl(Redirect.PATIENTS);
 
 		} catch (FeignException e) {
 
-			log.info("feignException status : " + e.status() + " message : " + e.getMessage());
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
-				log.info("Exception status : {}", e.status());
 				context.setRedirectAfterExceptionUrl(HTMLPage.ADD_PATIENT);
 				context.setReturnUrl(Redirect.HOME);
 			}
 
 			if (e.status() == 400) {
-				log.info("Exception status : {}", e.status());
 				context.setMessage("A patient with the same firstName, lastName and dateOfBirth already exists");
 				context.setReturnUrl(HTMLPage.ADD_PATIENT);
 			}
@@ -97,6 +121,13 @@ public class PatientServiceImpl implements PatientService {
 		return patientSaved;
 	}
 
+	/**
+	 * Updates the given patient in the patient app and database. 
+	 * 
+	 * @param header corresponding to authorization header
+	 * @param patient
+	 * @return PatientBean corresponding to the patient updated
+	 */
 	@Override
 	public PatientBean updatePatient(String header, PatientBean patient) {
 
@@ -104,21 +135,21 @@ public class PatientServiceImpl implements PatientService {
 
 		try {
 			patientUpdated = patientProxy.updatePatient(header, patient);
+			log.info("Patient saved id : {}, lastname : {}", patientUpdated.getId(), patientUpdated.getLastName());
 			context.resetUrl();
 			context.setReturnUrl(Redirect.PATIENTS);
+			
 		} catch (FeignException e) {
 
-			log.info("statut : {} message : {}", e.status(), e.getMessage());
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
-				log.info("Exception status : {}", e.status());
 				context.setRedirectAfterExceptionUrl("/patient/validateUpdate/" + context.getPatientId());
 				context.setMessage(e.getLocalizedMessage());
 				context.setReturnUrl(HTMLPage.UPDATE_PATIENT);
 			}
 
 			if (e.status() == 400) {
-				log.info("Exception status : {}", e.status());
 				context.setMessage("A patient with the same firstName, lastName and dateOfBirth already exists");
 				context.setReturnUrl(HTMLPage.UPDATE_PATIENT);
 			}
@@ -126,14 +157,24 @@ public class PatientServiceImpl implements PatientService {
 		return patientUpdated;
 	}
 
+	/**
+	 * Deletes the given patient in the patient app and database. 
+	 * 
+	 * @param header corresponding to authorization header
+	 * @param PatientBean corresponding to the patient to delete
+	 */
 	@Override
 	public void deletePatient(String header, PatientBean patient) {
 
 		try {
 			patientProxy.deletePatient(header, patient);
+			log.info("Patient deleted id : {}, lastname : {}", patient.getId(), patient.getLastName());
 			context.resetUrl();
 			context.setReturnUrl(Redirect.PATIENTS);
+			
 		} catch (FeignException e) {
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
+
 			if (e.status() == 401) {
 				context.setRedirectAfterExceptionUrl(HTMLPage.PATIENTS);
 				context.setReturnUrl(Redirect.HOME);

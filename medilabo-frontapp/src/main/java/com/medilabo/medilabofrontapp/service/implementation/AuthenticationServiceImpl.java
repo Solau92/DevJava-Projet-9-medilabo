@@ -26,6 +26,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 		this.context = context;
 	}
 	
+	/**
+	 * Proceeds to login.
+	 * 
+	 * @param authHeader corresponding to authorization header
+	 * @param user corresponding to the username and password filled by the user
+	 */
 	@Override
 	public void login(String authHeader, User user) {
 		
@@ -34,12 +40,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			context.getLoggedUser().setUsername(user.getUsername());
 			context.getLoggedUser().setPassword(user.getPassword());
 			
-		} catch (FeignException e) {
-			
-			log.info("Exception status login : {}", e.status());
+		} catch (FeignException e) {			
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 			
 			if (e.status() == 401) {
-				log.info("Exception status login in authenticationService: {}", e.status());
 				context.setMessage("Wrong username or password");
 				context.setRedirectAfterExceptionUrl(HTMLPage.HOME);
 			}
