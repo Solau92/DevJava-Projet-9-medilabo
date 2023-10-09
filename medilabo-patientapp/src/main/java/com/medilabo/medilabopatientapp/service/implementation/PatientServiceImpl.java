@@ -51,7 +51,7 @@ public class PatientServiceImpl implements PatientService {
 
 		if (optionalPatient.isEmpty()) {
 			log.error("Patient with id {} not found", id);
-			throw new PatientNotFoundException("Patient with id " + id + " not found");
+			throw new PatientNotFoundException("Patient with id {} " + id + " not found");
 		}
 		return optionalPatient.get();
 	}

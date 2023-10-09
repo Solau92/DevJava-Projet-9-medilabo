@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import org.springframework.boot.test.context.SpringBootTest;
@@ -117,6 +118,33 @@ public class PatientServiceTest {
 //		verify(context, times(1)).setRedirectAfterExceptionUrl(any(String.class));
 	}
 
+	@Test
+	void getPatient_Ok_Test() {
+
+		// GIVEN
+		when(patientProxy.getPatient(any(String.class), anyInt())).thenReturn(patient1);
+
+		// WHEN
+		PatientBean result = patientService.getPatient(header, 1);
+
+		// THEN
+		assertEquals(patient1.getFirstName(), result.getFirstName());
+	}
+	
+	@Disabled
+	@Test
+	void getPatient_Forbidden_Test() {
+
+//		// GIVEN
+//		when(patientProxy.getPatient(any(String.class), anyInt())).thenReturn(patient1);
+//
+//		// WHEN
+//		PatientBean result = patientService.getPatient(header, 1);
+//
+//		// THEN
+//		assertEquals(patient1.getFirstName(), result.getFirstName());
+	}
+	
 	@Test
 	void addPatient_Ok_Test() {
 

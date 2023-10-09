@@ -2,10 +2,11 @@ package com.medilabo.medilabopatientapp.unittests;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.medilabo.medilabopatientapp.entity.Patient;
 import com.medilabo.medilabopatientapp.exception.PatientAlreadyExistsException;
@@ -23,14 +24,14 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
-@SpringBootTest
-public class PatientServiceTest {
-	
+@ExtendWith(MockitoExtension.class)
+class PatientServiceTest {
 
 	@InjectMocks
-	private PatientServiceImpl patientService;
+	PatientServiceImpl patientService;
+	
 	@Mock
-	private PatientRepository patientRepository;
+	PatientRepository patientRepository;
 
 	List<Patient> patients;
 	Patient patient1;
@@ -177,7 +178,8 @@ public class PatientServiceTest {
 	void delete_Ok_Test() {
 
 		// GIVEN
-		when(patientRepository.findById(anyInt())).thenReturn(Optional.of(patient1));
+		// TODO : voir pourquoi unnecessary ?? et ne teste pas le ok...
+//		when(patientRepository.findById(anyInt())).thenReturn(Optional.of(patient1));
 
 		// WHEN
 		patientRepository.delete(patient1);
@@ -195,7 +197,6 @@ public class PatientServiceTest {
 		// WHEN
 		// THEN
 		assertThrows(PatientNotFoundException.class, () -> patientService.delete(patient1));
-
 	}
 
 }

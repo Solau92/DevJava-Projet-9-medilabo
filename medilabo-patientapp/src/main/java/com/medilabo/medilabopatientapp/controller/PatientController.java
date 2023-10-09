@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-
 import com.medilabo.medilabopatientapp.entity.Patient;
 import com.medilabo.medilabopatientapp.exception.PatientAlreadyExistsException;
 import com.medilabo.medilabopatientapp.exception.PatientNotFoundException;
@@ -36,7 +34,7 @@ public class PatientController {
 	 * @return ResponseEntity<List<Patient>> with http status ACCEPTED
 	 */
 	@GetMapping("/patient/patients")
-	public ResponseEntity<List<Patient>> findAllPatients(@RequestHeader("Authorization") String header) {
+	public ResponseEntity<List<Patient>> findAllPatients() {
 		log.info("/patients : Getting the list of all patients");
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(patientService.findAll());
 	}
@@ -51,7 +49,7 @@ public class PatientController {
 	 *                                       dateOfBirth
 	 */
 	@PostMapping("/patient/validate")
-	public ResponseEntity<Patient> addPatient(@RequestBody Patient patient, @RequestHeader("Authorization") String header) throws PatientAlreadyExistsException {
+	public ResponseEntity<Patient> addPatient(@RequestBody Patient patient) throws PatientAlreadyExistsException {
 		log.info("/patient/validate : Adding patient named {}{}", patient.getFirstName(), patient.getLastName());
 		return ResponseEntity.status(HttpStatus.CREATED).body(patientService.save(patient));
 	}
@@ -61,14 +59,15 @@ public class PatientController {
 	 * 
 	 * @param patient
 	 * @return ResponseEntity<Patient> with http status ACCEPTED
-	 * @throws PatientNotFoundException if no patient found with the patient's
+	 * @throws PatientNotFoundException      if no patient found with the patient's
 	 *                                       id
 	 * @throws PatientAlreadyExistsException if a patient already exists with the
 	 *                                       same firstName, lastName and
 	 *                                       dateOfBirth
 	 */
 	@PostMapping("/patient/validateUpdate")
-	public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient, @RequestHeader("Authorization") String header) throws PatientNotFoundException, PatientAlreadyExistsException {
+	public ResponseEntity<Patient> updatePatient(@RequestBody Patient patient)
+			throws PatientNotFoundException, PatientAlreadyExistsException {
 		log.info("/patient/validateUpdate : Updating patient with id {}", patient.getId());
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(patientService.update(patient));
 	}
@@ -78,10 +77,10 @@ public class PatientController {
 	 * 
 	 * @param patient
 	 * @return ResponseEntity<Patient> with http status ACCEPTED
-	 * @throws PatientNotFoundException if the patient was not found 
+	 * @throws PatientNotFoundException if the patient was not found
 	 */
 	@DeleteMapping("/patient/delete")
-	public ResponseEntity<Void> deletePatient(@RequestBody Patient patient, @RequestHeader("Authorization") String header) throws PatientNotFoundException {
+	public ResponseEntity<Void> deletePatient(@RequestBody Patient patient) throws PatientNotFoundException {
 		log.info("/patient/delete : Deleting patient named {}{}", patient.getFirstName(), patient.getLastName());
 		patientService.delete(patient);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -92,10 +91,10 @@ public class PatientController {
 	 * 
 	 * @param id
 	 * @return ResponseEntity<Patient> with http status ACCEPTED
-	 * @throws PatientNotFoundException if the patient was not found 
+	 * @throws PatientNotFoundException if the patient was not found
 	 */
 	@GetMapping("/patient/{id}")
-	public ResponseEntity<Patient> getPatient(@PathVariable int id, @RequestHeader("Authorization") String header) throws PatientNotFoundException {
+	public ResponseEntity<Patient> getPatient(@PathVariable int id) throws PatientNotFoundException {
 		log.info("/patient/{id} : Geting patient with id {}", id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(patientService.findById(id));
 	}

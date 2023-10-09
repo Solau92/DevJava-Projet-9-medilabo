@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.medilabo.medilabonoteapp.entity.Note;
@@ -14,6 +15,7 @@ import com.medilabo.medilabonoteapp.service.NoteService;
 import jakarta.annotation.PostConstruct;
 
 @Component
+@Profile("dev")
 public class Data {
 	
 	private static final Logger log = LoggerFactory.getLogger(Data.class);

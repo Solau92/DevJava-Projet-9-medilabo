@@ -1,6 +1,5 @@
 package com.medilabo.medilabofrontapp.unittests.controller;
 
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -8,15 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,17 +25,9 @@ import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.controller.PatientController;
 import com.medilabo.medilabofrontapp.model.User;
-import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
-import com.medilabo.medilabofrontapp.proxy.MicroservicePatientProxy;
-import com.medilabo.medilabofrontapp.service.NoteService;
-import com.medilabo.medilabofrontapp.service.PatientService;
 import com.medilabo.medilabofrontapp.service.implementation.NoteServiceImpl;
 import com.medilabo.medilabofrontapp.service.implementation.PatientServiceImpl;
 import com.medilabo.medilabofrontapp.service.implementation.RiskServiceImpl;
-
-import feign.FeignException;
-import feign.FeignException.Unauthorized;
-import feign.Request;
 
 @SpringBootTest
 class PatientControllerTest {
@@ -282,7 +269,7 @@ class PatientControllerTest {
 		when(context.getLoggedUser()).thenReturn(notLoggedUser);
 
 		// WHEN
-		String result = patientController.addPatientForm(model);
+		String result = patientController.updatePatientForm(1, model);
 
 		// THEN
 		assertEquals(Redirect.HOME, result);
