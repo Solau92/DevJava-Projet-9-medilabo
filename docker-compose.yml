@@ -72,6 +72,8 @@ services:
       - 18083:8083
     environment:
         SPRING_DATA_MONGODB_URI: mongodb://medilabo-noteapp-db:27018/notes
+        MONGO_INITDB_ROOT_USERNAME: usernamemdb
+        MONGO_INITDB_ROOT_PASSWORD: passwordmdb
     networks:
       - medilabo_network
 

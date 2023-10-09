@@ -20,6 +20,13 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 
 	private static final Logger log = LoggerFactory.getLogger(DiabetesRiskServiceImpl.class);
 
+	/**
+	 * Returns the risk of diabetes for a given patient.
+	 * 
+	 * @param Patient
+	 * @param List<NoteBean> all the notes corresponding to the patient
+	 * @return DiabetesRisk
+	 */
 	@Override
 	public DiabetesRisk calculateRisk(PatientBean patient, List<NoteBean> notes) {
 
@@ -29,6 +36,8 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 		int age = Period.between(patient.getDateOfBirth(), LocalDate.now()).getYears();
 		int nbOfTriggers = numberOfTriggers(notes);
 		String gender = patient.getGender();
+		
+		log.info("Diabetes risk for patient id : {}, age : {}, number of triggers : {}", patient.getId(), age, nbOfTriggers);
 
 		if (age > 30) {
 
@@ -65,6 +74,12 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 		return risk;
 	}
 
+	/**
+	 * Calculates the number of triggers, given a list of notes. 
+	 * 
+	 * @param List<NoteBean> notes
+	 * @return int, the number of triggers found in the notes
+	 */
 	public int numberOfTriggers(List<NoteBean> notes) {
 
 		int nbOfTriggers = 0;
@@ -74,11 +89,10 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 			for (Triggers t : Triggers.values()) {
 				if (n.getContent().toLowerCase().contains(t.label.toLowerCase())) {
 					nbOfTriggers++;
-					log.info(t.label);
 				}
 			}
 		}
-		log.info("Number of triggers : " + nbOfTriggers);
+		log.info("Number of triggers : {}", nbOfTriggers);
 		return nbOfTriggers;
 	}
 

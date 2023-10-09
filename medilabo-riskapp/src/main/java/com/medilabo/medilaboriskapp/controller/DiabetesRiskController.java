@@ -9,8 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-
 import com.medilabo.medilaboriskapp.bean.NoteBean;
 import com.medilabo.medilaboriskapp.bean.PatientBean;
 import com.medilabo.medilaboriskapp.model.DiabetesRisk;
@@ -28,7 +26,6 @@ public class DiabetesRiskController {
 	private final MicroservicePatientProxy patientProxy;
 	
 	private final MicroserviceNoteProxy noteProxy;
-
 	
 	public DiabetesRiskController(DiabetesRiskService riskService, MicroservicePatientProxy patientProxy, MicroserviceNoteProxy noteProxy) {
 		this.riskService = riskService;
@@ -36,12 +33,22 @@ public class DiabetesRiskController {
 		this.noteProxy = noteProxy;
 	}
 
+	/**
+	 * Returns the risk of diabetes for a patient, given his id. 
+	 * 
+	 * @param patientId
+	 * @return ResponseEntity<DiabetesRisk> with http status ACCEPTED
+	 */
 	@GetMapping("/risk/{patientId}")
-	public ResponseEntity<DiabetesRisk> getDiabetesRisk(@RequestHeader("Authorization") String header, @PathVariable int patientId) {
+	public ResponseEntity<DiabetesRisk> getDiabetesRisk(@PathVariable int patientId) {
 		
-		PatientBean patient = patientProxy.getPatient(header, patientId);
+		log.info("/risk/{}", patientId);
 		
-		List<NoteBean> notes = noteProxy.getNotes(header, patientId);
+		PatientBean patient = patientProxy.getPatient(patientId);
+		log.info("Calculating risk for patient : {}", patient);
+		
+		List<NoteBean> notes = noteProxy.getNotes(patientId);
+		log.info("List of notes for patient : {}", notes);
 
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(riskService.calculateRisk(patient, notes));		
 	}

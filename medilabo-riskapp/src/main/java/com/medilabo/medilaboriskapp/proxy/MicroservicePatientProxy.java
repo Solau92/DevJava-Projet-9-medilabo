@@ -11,6 +11,6 @@ import com.medilabo.medilaboriskapp.bean.PatientBean;
 public interface MicroservicePatientProxy {
 	
 	@GetMapping("/patient/{id}")
-	PatientBean getPatient(@RequestHeader("Authorization") String header, @PathVariable("id") int id);
+	PatientBean getPatient(@PathVariable("id") int id);
 
 }

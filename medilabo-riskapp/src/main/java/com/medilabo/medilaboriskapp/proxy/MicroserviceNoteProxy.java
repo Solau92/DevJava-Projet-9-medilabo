@@ -13,6 +13,6 @@ import com.medilabo.medilaboriskapp.bean.NoteBean;
 public interface MicroserviceNoteProxy {
 	
 	@GetMapping("/note/notes/{patientId}")
-	List<NoteBean> getNotes(@RequestHeader("Authorization") String header, @PathVariable("patientId") int patientId);
+	List<NoteBean> getNotes(@PathVariable("patientId") int patientId);
 
 }

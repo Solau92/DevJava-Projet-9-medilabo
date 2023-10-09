@@ -13,6 +13,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
+/**
+ * Spring security configuration.
+ * 
+ */
 @Configuration
 @EnableWebFluxSecurity
 public class SecurityConfigInMemory {
@@ -39,6 +43,7 @@ public class SecurityConfigInMemory {
 
 		UserDetails admin = User.builder().username("admin10").password(passwordEncoder().encode("admin"))
 				.build();
+		
 		return new MapReactiveUserDetailsService(user, admin);
 	}
 	

@@ -26,9 +26,17 @@ public class SpringCloudConfig {
 	@Value("${microservice-risk.uri}")
 	private String msRiskUri;
 
+	/**
+	 * Configures the gateway routes.
+	 * 
+	 * @param RouteLocatorBuilder
+	 * @return RouteLocator
+	 */
 	@Bean
 	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 				
+		log.info("msGatewayUri : {}, msPatientUri : {}, msNoteUri : {}, msRiskUri : {}", msGatewayUri, msPatientUri, msNoteUri, msRiskUri);
+		
 		return builder.routes()
 				.route(r -> r.path("/ms-patient/patient/**")
 						.filters(f -> f.rewritePath("/ms-patient/patient/(?<segment>.*)", "/patient/${segment}"))
