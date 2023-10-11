@@ -29,22 +29,22 @@ import com.medilabo.medilabofrontapp.service.implementation.AuthenticationServic
 class AuthenticationControllerTest {
 
 	@InjectMocks
-	private AuthenticationController authenticationController;
+	AuthenticationController authenticationController;
 
 	@Mock
-	private Context context;
+	Context context;
 
 	@Mock
-	private AuthenticationServiceImpl authenticationService;
+	AuthenticationServiceImpl authenticationService;
 	
 	@Mock
-	private AuthenticationProxy authenticationProxy;
+	AuthenticationProxy authenticationProxy;
 
 	@Mock
-	private Model model;
+	Model model;
 
 	@Mock
-	private BindingResult bResult;
+	BindingResult bResult;
 
 	@Mock
 	User user;
