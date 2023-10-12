@@ -9,11 +9,17 @@
 
 </head>
 
-<body>
+<body class="container-sm text-center">
 
-	<h1>View note :</h1>
+	<header class="container-xl text-center">
+		<img th:src="@{../../images/medilaboBannerWithoutText.jpg}" />
+	</header>
 
-	<div th:object="${patient}">
+	<div class="mx-4 p-4">
+		<h1>View note</h1>
+	</div>
+
+	<div class="mx-4 p-4" th:object="${patient}">
 
 		<form method="post" role="form"
 			th:action="@{/note/validateUpdate/{id}(id=${note.id})}"
@@ -28,17 +34,17 @@
 
 			<p th:if="${error}" th:text="${error}"></p>
 
-			<div class="ligne">
-				<label class="formulaire">Content</label>
-				<textarea rows="10"
-				class="form-control" id="content" name="content"
-					placeholder="Enter content" th:field="*{content}" readonly="readonly"></textarea>
+			<div class="mx-2 p-2">
+				<label class="formulaire fs-5">Content</label>
+				<textarea rows="10" class="form-control" id="content" name="content"
+					placeholder="Enter content" th:field="*{content}"
+					readonly="readonly"></textarea>
 			</div>
 
 			<div>
-			
-				<a th:href="@{/patient/view/{patientId}(patientId=${note.patientId})}" class="btn btn-primary btn-sm">Back to patient</a>
-			
+				<a
+					th:href="@{/patient/view/{patientId}(patientId=${note.patientId})}"
+					class="btn btn-outline-info btn-lg">Back to patient</a>
 			</div>
 
 		</form>

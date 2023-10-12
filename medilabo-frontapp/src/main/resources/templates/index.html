@@ -9,11 +9,22 @@
 
 </head>
 
-<body>
+<body class="container-sm text-center">
 
-	<h1>Index :</h1>
+	<header>
+		<img th:src="@{images/medilaboBannerWithoutText.jpg}" />
+	</header>
 
-	<a href="/patient/patients" class="btn btn-primary btn-sm">List of patients</a>
+	<section class="mx-4 p-4">
+		<div class="mx-4 p-4">
+			<h1>Welcome to MediLabo Solutions !</h1>
+		</div>
+
+		<div class="mx-4 p-4">
+			<a href="/patient/patients" class="btn btn-outline-info btn-lg">List
+				of patients</a>
+		</div>
+	</section>
 
 </body>
 </html>

@@ -56,7 +56,7 @@ public class PatientController {
 	public String patientList(Model model) {
 
 		String authHeader = context.setAuthHeader();
-		log.info("Authorization header : {}", authHeader);
+		log.debug("Authorization header : {}", authHeader);
 
 		List<PatientBean> patients = patientService.getPatients(authHeader);
 		model.addAttribute("patients", patients);

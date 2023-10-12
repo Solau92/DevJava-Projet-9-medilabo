@@ -3,41 +3,56 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Index</title>
+<title>Login</title>
 <link rel="stylesheet" type="text/css"
 	href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
 
 </head>
 
-<body>
+<body class="container-sm text-center">
 
-	<form method="post" role="form" th:action="@{/login}"
-		th:object="${user}" class="form-horizontal">
+	<header class="text-center">
+		<img th:src="@{images/medilaboLogoAndText.jpg}" />
+	</header>
 
-		<div class="ligne">
-			<label class="formulaire"> Username</label> <input type="text"
-				id="username" name="username" class="form-control"
-				th:field="*{username}" placeholder="Enter username" />
-			<p th:errors="*{username}" th:if="${#fields.hasErrors('username')}"></p>
+	<section class="mx-4 p-4">
+	
+		<form method="post" role="form" th:action="@{/login}"
+			th:object="${user}" class="form-horizontal">
 
+			<div class="mx-4 p-4">
+				<h3>
+					<label class="formulaire">Username</label>
+				</h3>
+				<input type="text" id="username" name="username"
+					class="form-control" th:field="*{username}"
+					placeholder="Enter username" />
+				<p class="fs-5" style="color: red" th:errors="*{username}"
+					th:if="${#fields.hasErrors('username')}"></p>
+			</div>
 
-		</div>
+			<div class="mx-4 p-4">
+				<h3>
+					<label class="formulaire">Password</label>
+				</h3>
+				<input type="password" id="password" name="password"
+					class="form-control" th:field="*{password}"
+					placeholder="Enter password" />
+				<p class="fs-5" style="color: red" th:errors="*{password}"
+					th:if="${#fields.hasErrors('password')}"></p>
+			</div>
 
-		<div class="ligne">
-			<label class="formulaire"> Password</label> <input type="password"
-				id="password" name="password" class="form-control"
-				th:field="*{password}" placeholder="Enter password" />
-			<p th:errors="*{password}" th:if="${#fields.hasErrors('password')}"></p>
-		</div>
+			<div>
+				<p class="fs-5" style="color: red" th:text="${message}"></p>
+			</div>
 
-		<div>
-			<div class="text-alert" th:text="${message}"></div>
-		</div>
-
-		<div>
-			<button type="submit" class="blueButton">Submit</button>
-		</div>
-	</form>
-
+			<div class="mx-4 p-4">
+				<button type="submit" class="btn btn-outline-info btn-lg">Submit</button>
+			</div>
+			
+		</form>
+		
+	</section>
+	
 </body>
 </html>

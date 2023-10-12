@@ -4,83 +4,103 @@
 <head>
 <meta charset="UTF-8">
 <title>View patient</title>
-    <link rel="stylesheet" type="text/css" href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css"
+	href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
 
 </head>
 
-<body>
+<body class="container-sm">
 
-	<h1>View patient :</h1>
-	
-	<br>
+	<header class="container-xl text-center">
+		<img th:src="@{../../images/medilaboBannerWithoutText.jpg}" />
+	</header>
 
-	<h2>Patient information :</h2>
+	<section>
 
-	<a th:href="@{/patient/update/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Edit</a>
-	<!--  -->
-	<div>
-		First name : <span th:text="${patient.firstName}"></span>
-	</div>
+		<div class="mx-4 p-4 text-center">
+			<h1>View patient</h1>
+		</div>
 
-	<div>
-		Last name : <span th:text="${patient.lastName}"></span>
-	</div>
+		<div class="mx-3 p-3">
+			<h2>Patient information</h2>
+		</div>
 
-	<div>
-		Date of birth : <span th:text="${patient.dateOfBirth}"></span>
-	</div>
+		<div class="mx-4 px-4">
+			<a th:href="@{/patient/update/{id}(id=${patient.id})}"
+				class="btn btn-outline-info">Edit</a>
+		</div>
 
-	<div>
-		Gender : <span th:text="${patient.gender}"></span>
-	</div>
+		<div class="mx-3 p-3 fs-6">
+			<div>
+				<u>First name :</u> <span th:text="${patient.firstName}"></span>
+			</div>
 
-	<div>
-		Address : <span th:text="${patient.address}"></span>
-	</div>
+			<div>
+				<u>Last name :</u> <span th:text="${patient.lastName}"></span>
+			</div>
 
-	<div>
-		Phone number : <span th:text="${patient.phoneNumber}"></span>
-	</div>
+			<div>
+				<u>Date of birth :</u> <span th:text="${patient.dateOfBirth}"></span>
+			</div>
 
-	<br>
+			<div>
+				<u>Gender :</u> <span th:text="${patient.gender}"></span>
+			</div>
 
+			<div>
+				<u>Address :</u> <span th:text="${patient.address}"></span>
+			</div>
 
-	<h2>Patient notes :</h2>
+			<div>
+				<u>Phone number :</u> <span th:text="${patient.phoneNumber}"></span>
+			</div>
 
-	<a th:href="@{/note/add/{patientId}(patientId=${patient.id})}"
-		class="btn btn-primary btn-sm">Add note</a>
+		</div>
 
-	<table class="table table-bordered">
-		<thead>
-			<tr>
-				<th scope="col">Date</th>
-				<th scope="col">Content</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="note : ${notes}">
-				<td th:text="${note.date}"></td>
-				<td th:text="${note.content}"></td>
-				<td>
- 				<a th:href="@{/note/view/{id}(id=${note.id})}">View</a> 
-				<a th:href="@{/note/update/{id}(id=${note.id})}">Edit</a> <a
-					th:href="@{/note/delete/{id}(id=${note.id})}">Delete</a></td>
-			</tr>
-		</tbody>
-	</table>
+		<div class="mx-3 p-3">
+			<h2>Patient notes</h2>
+		</div>
 
-	<br>
+		<div class="mx-4 px-4">
+			<a th:href="@{/note/add/{patientId}(patientId=${patient.id})}"
+				class="btn btn-outline-info">Add note</a>
+		</div>
 
-	<h2>Patient diabetes risk :</h2>
-	
-	<div>
-		Diabetes risk : <span th:text="${risk.risk}"></span>
-	</div>
+		<div class="mx-3 p-3 ">
+			<table class="table table-info table-striped">
+				<thead class="text-center">
+					<tr>
+						<th scope="col">Date</th>
+						<th scope="col">Content</th>
+						<th scope="col">           </th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="note : ${notes}">
+						<td th:text="${note.date}"></td>
+						<td th:text="${note.content}"></td>
+						<td><a th:href="@{/note/view/{id}(id=${note.id})}">View</a> <a
+							th:href="@{/note/update/{id}(id=${note.id})}">Edit</a> <a
+							th:href="@{/note/delete/{id}(id=${note.id})}">Delete</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
 
-	<br>
+		<div class="mx-3 p-3">
+			<h2>Patient diabetes risk</h2>
+		</div>
 
-	<a href="/patient/patients" class="btn btn-primary btn-sm">Back to list of patients</a>
+		<div class="mx-3 p-3 fs-5">
+			Diabetes risk : <b><span th:text="${risk.risk}"></span></b>
+		</div>
 
+		<div class="text-center">
+			<a href="/patient/patients" class="btn btn-outline-info btn-lg">Back
+				to list of patients</a>
+		</div>
+
+	</section>
 
 </body>
 </html>

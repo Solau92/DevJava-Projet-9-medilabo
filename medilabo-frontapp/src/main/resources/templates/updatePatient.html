@@ -4,81 +4,88 @@
 <head>
 <meta charset="UTF-8">
 <title>Update patient</title>
-    <link rel="stylesheet" type="text/css" href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css"/>
+<link rel="stylesheet" type="text/css"
+	href="../../webjars/bootstrap/5.2.3/css/bootstrap.min.css" />
 
 
 </head>
 
-<body>
+<body class="container-sm text-center">
 
-	<h1>Update patient :</h1>
+	<header class="container-xl text-center">
+		<img th:src="@{../../images/medilaboBannerWithoutText.jpg}" />
+	</header>
 
-	<div>
+	<section>
 
-		<form method="post" role="form"
-			th:action="@{/patient/validateUpdate/{id}(id=${patient.id})}"
-			th:object="${patient}">
+		<div class="mx-4 p-4">
+			<h1>Update patient :</h1>
+		</div>
 
-			<p th:if="${error}" th:text="${error}"></p>
+		<div class="mx-4 p-4">
 
-			<div class="ligne">
-				<label class="formulaire">First name</label> <input
-					class="form-control" id="firstName" name="firstName"
-					placeholder="Enter first name" th:field="*{firstName}" type="text" />
+			<form method="post" role="form"
+				th:action="@{/patient/validateUpdate/{id}(id=${patient.id})}"
+				th:object="${patient}">
 
-				<p th:errors="*{firstName}"
-					th:if="${#fields.hasErrors('firstName')}"></p>
+				<p class="fs-5" style="color: red" th:if="${error}" th:text="${error}"></p>
 
-			</div>
+				<div class="mx-2 p-2">
+					<label class="formulaire fs-5">First name</label> <input
+						class="form-control" id="firstName" name="firstName"
+						placeholder="Enter first name" th:field="*{firstName}" type="text" />
 
-			<div class="ligne">
-				<label class="formulaire">Last name</label> 
-				<input
-					class="form-control" id="lastName" name="lastName"
-					placeholder="Enter last name" type="text" th:field="*{lastName}" />
-				<p th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></p>
-			</div>
+					<p class="fs-5" style="color: red" th:errors="*{firstName}"
+						th:if="${#fields.hasErrors('firstName')}"></p>
+				</div>
 
-			<div class="ligne">
-				<label class="formulaire">Date of birth</label> <input
-					class="form-control" id="dateOfBirth" name="dateOfBirth"
-					placeholder="Enter date of birth" type="date"
-					th:field="*{dateOfBirth}" />
-				<p th:errors="*{dateOfBirth}"
-					th:if="${#fields.hasErrors('dateOfBirth')}"></p>
-			</div>
+				<div class="mx-2 p-2">
+					<label class="formulaire fs-5">Last name</label> <input
+						class="form-control" id="lastName" name="lastName"
+						placeholder="Enter last name" type="text" th:field="*{lastName}" />
+					<p class="fs-5" style="color: red" th:errors="*{lastName}" th:if="${#fields.hasErrors('lastName')}"></p>
+				</div>
 
-			<div class="ligne">
-				<label class="formulaire">Gender</label> <select
-					th:field="*{gender}">
-					<option value="M">M</option>
-					<option value="F">F</option>
-				</select>
+				<div class="mx-2 p-2">
+					<label class="formulaire fs-5">Date of birth</label> <input
+						class="form-control" id="dateOfBirth" name="dateOfBirth"
+						placeholder="Enter date of birth" type="date"
+						th:field="*{dateOfBirth}" />
+					<p class="fs-5" style="color: red" th:errors="*{dateOfBirth}"
+						th:if="${#fields.hasErrors('dateOfBirth')}"></p>
+				</div>
 
-				<p th:errors="*{gender}" th:if="${#fields.hasErrors('gender')}"></p>
-			</div>
+				<div class="mx-2 p-2">
+					<label class="formulaire fs-5">Gender</label> <select
+						th:field="*{gender}">
+						<option value="M">M</option>
+						<option value="F">F</option>
+					</select>
 
-			<div class="ligne">
-				<label class="formulaire">Address</label> <input
-					class="form-control" id="address" name="address"
-					placeholder="Enter address" type="text" th:field="*{address}" />
-			</div>
+					<p class="fs-5" style="color: red" th:errors="*{gender}" th:if="${#fields.hasErrors('gender')}"></p>
+				</div>
 
-			<div class="ligne">
-				<label class="formulaire">Phone number</label> <input
-					class="form-control" id="phoneNumber" name="phoneNumber"
-					placeholder="Enter phoneNumber" type="text"
-					th:field="*{phoneNumber}" />
-				<p th:errors="*{phoneNumber}"
-					th:if="${#fields.hasErrors('phoneNumber')}"></p>
-			</div>
+				<div class="mx-2 p-2">
+					<label class="formulaire fs-5">Address</label> <input
+						class="form-control" id="address" name="address"
+						placeholder="Enter address" type="text" th:field="*{address}" />
+				</div>
 
-			<div>
-				<button type="submit" class="btn btn-primary btn-sm">Update</button>
-			</div>
+				<div class="mx-2 p-2">
+					<label class="formulaire fs-5">Phone number</label> <input
+						class="form-control" id="phoneNumber" name="phoneNumber"
+						placeholder="Enter phoneNumber" type="text"
+						th:field="*{phoneNumber}" />
+					<p class="fs-5" style="color: red" th:errors="*{phoneNumber}"
+						th:if="${#fields.hasErrors('phoneNumber')}"></p>
+				</div>
 
-		</form>
-	</div>
+				<div>
+					<button type="submit" class="btn btn-outline-info btn-lg">Update</button>
+				</div>
 
+			</form>
+		</div>
+	</section>
 </body>
 </html>

@@ -9,11 +9,17 @@
 
 </head>
 
-<body>
+<body class="container-sm text-center">
 
-	<h1>Update note :</h1>
+	<header class="container-xl text-center">
+		<img th:src="@{../../images/medilaboBannerWithoutText.jpg}" />
+	</header>
 
-	<div th:object="${patient}">
+	<div class="mx-4 p-4">
+		<h1>Update note</h1>
+	</div>
+
+	<div class="mx-4 p-4" th:object="${patient}">
 
 		<form method="post" role="form"
 			th:action="@{/note/validateUpdate/{id}(id=${note.id})}"
@@ -28,15 +34,14 @@
 
 			<p th:if="${error}" th:text="${error}"></p>
 
-			<div class="ligne">
-				<label class="formulaire">Content</label>
-				<textarea rows="10"
-				class="form-control" id="content" name="content"
+			<div class="mx-2 p-2">
+				<label class="formulaire fs-5">Content</label>
+				<textarea rows="10" class="form-control" id="content" name="content"
 					placeholder="Enter content" th:field="*{content}"></textarea>
 			</div>
 
 			<div>
-				<button type="submit" class="btn btn-primary btn-sm">Update</button>
+				<button type="submit" class="btn btn-outline-info btn-lg">Update</button>
 
 			</div>
 

@@ -4,6 +4,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
@@ -32,9 +33,11 @@ public class SecurityConfigInMemory {
 		http
 		.csrf(csrf -> csrf.disable())
 		.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated()).httpBasic(withDefaults());
+				
 		return http.build();
 	}
 
+	// TODO : modifier 
 	@Bean
 	public MapReactiveUserDetailsService  userDetailsService() {
 
