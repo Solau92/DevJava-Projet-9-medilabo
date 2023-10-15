@@ -12,10 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -35,11 +38,11 @@ class DiabetesRiskIT {
 	@Autowired
 	private DiabetesRiskServiceImpl diabetesRiskService;
 	
-//	@Mock
-//	MicroservicePatientProxy patientProxy;
-//	
-//	@Mock
-//	MicroserviceNoteProxy noteProxy;
+	@MockBean
+	MicroservicePatientProxy patientProxy;
+	
+	@MockBean
+	MicroserviceNoteProxy noteProxy;
 	
 	PatientBean patient1;
 	List<NoteBean> notes;
@@ -53,19 +56,19 @@ class DiabetesRiskIT {
 		patient1.setId(1);
 		patient1.setFirstName("firstName1");
 		patient1.setLastName("lastName1");
-		patient1.setDateOfBirth(LocalDate.of(1981, 01, 01));
-		patient1.setGender("M");
+		patient1.setDateOfBirth(LocalDate.now().minusYears(20));
+		patient1.setGender("F");
 				
 		note1 = new NoteBean();
 		note1.setId("111111");
 		note1.setDate(LocalDate.now());
-		note1.setContent("content 1");
+		note1.setContent("two triggers poids taille");
 		note1.setPatientId(1);
 
 		note2 = new NoteBean();
 		note2.setId("222222");
 		note2.setDate(LocalDate.now());
-		note2.setContent("content 2");
+		note2.setContent("two triggers fumeuse rechute");
 		note2.setPatientId(1);
 
 		notes = new ArrayList<>();
@@ -76,18 +79,15 @@ class DiabetesRiskIT {
 	@Test
 	void getDiabetesRisk_Test() throws Exception {
 			
-		// Commment faire pour requête autres microservices ?? 
-//		when(patientProxy.getPatient(anyInt())).thenReturn(patient1);
-//		when(noteProxy.getNotes(anyInt())).thenReturn(notes);
-		
-//		jakarta.servlet.ServletException: Request processing failed: 
-//		feign.RetryableException: Connection refused: no further information executing 
-//		GET http://localhost:8082/patient/1
+		when(patientProxy.getPatient(anyInt())).thenReturn(patient1);
+		when(noteProxy.getNotes(anyInt())).thenReturn(notes);
 		
 		MvcResult result = mockMvc.perform(get("/risk/1")).
 				andExpect(status().isAccepted()).andReturn();
 		
-		int resultStatus = result.getResponse().getStatus();	
+		String resultAsString = result.getResponse().getContentAsString();
+					
+		assertTrue(resultAsString.contains("IN_DANGER"));
 			
 	}
 }

@@ -36,8 +36,9 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 		int age = Period.between(patient.getDateOfBirth(), LocalDate.now()).getYears();
 		int nbOfTriggers = numberOfTriggers(notes);
 		String gender = patient.getGender();
-		
-		log.info("Diabetes risk for patient id : {}, age : {}, number of triggers : {}", patient.getId(), age, nbOfTriggers);
+
+		log.info("Diabetes risk for patient id : {}, age : {}, number of triggers : {}", patient.getId(), age,
+				nbOfTriggers);
 
 		if (age > 30) {
 
@@ -50,7 +51,7 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 			default -> risk.setRisk(RiskLevel.EARLY_ONSET);
 			}
 
-		// age < 30
+			// age < 30
 		} else {
 
 			if (gender.equals("M")) {
@@ -61,7 +62,7 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 				default -> risk.setRisk(RiskLevel.EARLY_ONSET);
 				}
 
-			// gender : F
+				// gender : F
 			} else {
 				switch (nbOfTriggers) {
 				case 0, 1, 2, 3 -> risk.setRisk(RiskLevel.NONE);
@@ -74,12 +75,13 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 		return risk;
 	}
 
-	/**
-	 * Calculates the number of triggers, given a list of notes. 
+	/** 
+	 * Calculates the number of triggers, given a list of notes.
 	 * 
 	 * @param List<NoteBean> notes
 	 * @return int, the number of triggers found in the notes
 	 */
+
 	public int numberOfTriggers(List<NoteBean> notes) {
 
 		int nbOfTriggers = 0;
@@ -89,6 +91,7 @@ public class DiabetesRiskServiceImpl implements DiabetesRiskService {
 			for (Triggers t : Triggers.values()) {
 				if (n.getContent().toLowerCase().contains(t.label.toLowerCase())) {
 					nbOfTriggers++;
+					log.debug(t.toString() + ", ");
 				}
 			}
 		}

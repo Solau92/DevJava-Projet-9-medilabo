@@ -78,12 +78,11 @@ public class NoteServiceImpl implements NoteService {
 			log.info("Note found id : {}, content : {}", note.getId(), note.getContent());
 
 		} catch(FeignException e) {
-			log.info("statut : {} message : {}", e.status(), e.getMessage());
+			log.info("FeignException status : {} message : {}", e.status(), e.getMessage());
 			context.setMessage(e.getLocalizedMessage());
 
-			//TODO : exceptions
 			if (e.status() == 401) {
-				log.info("Exception status : {}", e.status());
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl("/patient/validateUpdate/" + context.getPatientId());
 				context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 			}
@@ -109,12 +108,11 @@ public class NoteServiceImpl implements NoteService {
 			log.debug(notes.toString());
 
 		} catch(FeignException e) {
-			log.info("statut : {} message : {}", e.status(), e.getMessage());
+			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 			context.setMessage(e.getLocalizedMessage());
 
-			//TODO : revoir 
 			if (e.status() == 401) {
-				log.info("Exception status : {}", e.status());
+				log.info("Exception 401 {}", e.getMessage());
 				context.setRedirectAfterExceptionUrl("/patient/validateUpdate/" + context.getPatientId());
 				context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 			}
@@ -142,12 +140,11 @@ public class NoteServiceImpl implements NoteService {
 			context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 
 		} catch (FeignException e) {
-			log.info("statut : {} message : {}", e.status(), e.getMessage());
-			//TODO : voir 
+			log.info("FeignException status : {} message : {}", e.status(), e.getMessage());
 			context.setMessage(e.getLocalizedMessage());
 
 			if (e.status() == 401) {
-				log.info("Exception status : {}", e.status());
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl("/patient/validateUpdate/" + context.getPatientId());
 				context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 			}
@@ -171,9 +168,10 @@ public class NoteServiceImpl implements NoteService {
 			context.setReturnUrl(Redirect.VIEW_PATIENT + context.getPatientId());
 
 		} catch (FeignException e) {
-			log.info("statut : {} message : {}", e.status(), e.getMessage());
+			log.info("FeignException status : {} message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl("/patient/patients");
 				context.setReturnUrl(Redirect.HOME);
 			}

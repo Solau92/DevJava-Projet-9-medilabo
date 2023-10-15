@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
 import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.controller.AuthenticationController;
 import com.medilabo.medilabofrontapp.model.User;
@@ -95,13 +96,13 @@ class AuthenticationControllerTest {
 		
 		// GIVEN 
 		when(bResult.hasErrors()).thenReturn(false);
-		when(context.getReturnUrl()).thenReturn(HTMLPage.HOME);
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
 
 		// WHEN 
 		String result = authenticationController.login(new User(), bResult, model);
 		
 		// THEN 
-		assertEquals(HTMLPage.HOME, result);
+		assertEquals(Redirect.HOME, result);
 	}
 
 	@Test
@@ -127,6 +128,17 @@ class AuthenticationControllerTest {
 
 		// THEN
 		assertEquals("index", result);
+	}
+	
+	@Test
+	void logout_Ok_Test() {
+
+		// GIVEN
+		// WHEN
+		String result = authenticationController.logout();
+
+		// THEN
+		assertEquals(Redirect.HOME, result);
 	}
 
 }

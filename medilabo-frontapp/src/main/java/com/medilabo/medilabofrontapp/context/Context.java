@@ -129,4 +129,11 @@ public class Context {
 		this.patientId = 0;
 	}
 	
+	/*
+	 * Reset the Logged User
+	 */
+	public void logoutUser() {
+		this.loggedUser = new User();
+	}
+	
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.service.implementation.AuthenticationServiceImpl;
@@ -85,6 +86,14 @@ public class AuthenticationController {
 	public String index() {
 		log.info("Index page");
 		return HTMLPage.INDEX;
+	}
+	
+	@GetMapping("/logout")
+	public String logout() {
+		log.info("Logout");
+		authenticationService.logout();
+		context.setMessage("You were successfuly logged out");
+		return Redirect.HOME;
 	}
 
 }

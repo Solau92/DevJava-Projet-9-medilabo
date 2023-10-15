@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.medilabo.medilabofrontapp.bean.DiabetesRiskBean;
 import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceRiskProxy;
 import com.medilabo.medilabofrontapp.service.RiskService;
@@ -42,12 +43,13 @@ public class RiskServiceImpl implements RiskService {
 			diabetesRisk = riskProxy.getDiabetesRisk(header, patientId);
 			log.info(diabetesRisk.toString());
 
-		} catch (FeignException e) { // TODO : gérer exceptions
+		} catch (FeignException e) {
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl(HTMLPage.PATIENTS);
-				context.setReturnUrl(HTMLPage.HOME);
+				context.setReturnUrl(Redirect.HOME);
 			}
 		}
 		return diabetesRisk;

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.medilabo.medilabofrontapp.constants.HTMLPage;
+import com.medilabo.medilabofrontapp.constants.Redirect;
 import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.AuthenticationProxy;
@@ -44,14 +45,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 			
 			if (e.status() == 401) {
+				log.info("Wrong username or password");
 				context.setMessage("Wrong username or password");
-				context.setRedirectAfterExceptionUrl(HTMLPage.HOME);
+				context.setRedirectAfterExceptionUrl(Redirect.HOME);
 			}
 		}
 		
 		String urlTempo = context.getRedirectAfterExceptionUrl();
 		context.resetUrl();
 		context.setReturnUrl("redirect:" + urlTempo);
+	}
+
+	/**
+	 * Proceeds to logout. 
+	 * 
+	 */
+	@Override
+	public void logout() {
+		context.logoutUser();
+		log.info("Logged out");
 	}
 
 }

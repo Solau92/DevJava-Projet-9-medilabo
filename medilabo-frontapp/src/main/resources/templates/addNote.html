@@ -14,6 +14,11 @@
 	<header class="container-xl text-center">
 		<img th:src="@{../../images/medilaboBannerWithoutText.jpg}" />
 	</header>
+	
+	<nav class="mx-4 p-4 text-end">
+		<a href="/patient/patients" class="btn btn-outline-info btn-sm">List of patients</a>
+		<a href="/logout" class="btn btn-outline-info btn-sm">Logout</a>
+	</nav>
 
 	<div class="mx-4 p-4">
 		<h1>New note</h1>
@@ -35,7 +40,6 @@
 
 			<div>
 				<button type="submit" class="btn btn-outline-info btn-lg">Add</button>
-
 			</div>
 
 		</form>

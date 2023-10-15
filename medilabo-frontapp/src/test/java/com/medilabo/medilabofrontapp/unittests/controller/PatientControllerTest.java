@@ -118,13 +118,13 @@ class PatientControllerTest {
 
 		// GIVEN
 		when(context.setAuthHeader()).thenReturn(wrongHeader);
-		when(context.getReturnUrl()).thenReturn(HTMLPage.HOME);
+		when(context.getReturnUrl()).thenReturn(Redirect.HOME);
 
 		// WHEN
 		String result = patientController.patientList(model);
 
 		// THEN
-		assertEquals(HTMLPage.HOME, result);
+		assertEquals(Redirect.HOME, result);
 	}
 
 	@Test

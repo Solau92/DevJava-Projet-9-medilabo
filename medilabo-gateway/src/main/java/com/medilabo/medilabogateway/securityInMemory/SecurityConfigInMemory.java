@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
  * Spring security configuration.
@@ -32,19 +33,19 @@ public class SecurityConfigInMemory {
 
 		http
 		.csrf(csrf -> csrf.disable())
-		.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated()).httpBasic(withDefaults());
+		.authorizeExchange(exchanges -> exchanges.anyExchange().authenticated()).httpBasic(withDefaults())
+		;
 				
 		return http.build();
 	}
 
-	// TODO : modifier 
 	@Bean
 	public MapReactiveUserDetailsService  userDetailsService() {
 
-		UserDetails user = User.builder().username("user10").password(passwordEncoder().encode("password"))
+		UserDetails user = User.builder().username("medilaboUser").password(passwordEncoder().encode("medilaboUserPassword"))
 				.build();
 
-		UserDetails admin = User.builder().username("admin10").password(passwordEncoder().encode("admin"))
+		UserDetails admin = User.builder().username("medilaboAdmin").password(passwordEncoder().encode("medilaboAdminPassword"))
 				.build();
 		
 		return new MapReactiveUserDetailsService(user, admin);

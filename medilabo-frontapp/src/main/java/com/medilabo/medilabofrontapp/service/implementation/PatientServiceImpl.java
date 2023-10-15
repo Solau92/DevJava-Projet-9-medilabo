@@ -50,10 +50,11 @@ public class PatientServiceImpl implements PatientService {
 
 		} catch (FeignException e) {
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
-			
+
 			if (e.status() == 401) {
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl(HTMLPage.PATIENTS);
-				context.setReturnUrl(HTMLPage.HOME);
+				context.setReturnUrl(Redirect.HOME);
 			}
 		}
 		return patients;
@@ -76,9 +77,8 @@ public class PatientServiceImpl implements PatientService {
 			patient = patientProxy.getPatient(header, id);
 			log.info("Patient found id : {}, lastname : {}", patient.getId(), patient.getLastName());
 			context.setReturnUrl(HTMLPage.VIEW_PATIENT);
-			
+
 		} catch (FeignException e) {
-			// TODO : Gerer PatientNotFoundException
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 			context.setMessage("Patient with id {} not found" + id);
 			context.setReturnUrl(HTMLPage.PATIENTS);
@@ -87,9 +87,9 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	/**
-	 * Adds the given patient in the patient app and database. 
+	 * Adds the given patient in the patient app and database.
 	 * 
-	 * @param header corresponding to authorization header
+	 * @param header  corresponding to authorization header
 	 * @param patient
 	 * @return PatientBean corresponding to the patient added
 	 */
@@ -109,11 +109,13 @@ public class PatientServiceImpl implements PatientService {
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl(HTMLPage.ADD_PATIENT);
 				context.setReturnUrl(Redirect.HOME);
 			}
 
 			if (e.status() == 400) {
+				log.info("A patient with the same firstName, lastName and dateOfBirth already exists", e.getMessage());
 				context.setMessage("A patient with the same firstName, lastName and dateOfBirth already exists");
 				context.setReturnUrl(HTMLPage.ADD_PATIENT);
 			}
@@ -122,9 +124,9 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	/**
-	 * Updates the given patient in the patient app and database. 
+	 * Updates the given patient in the patient app and database.
 	 * 
-	 * @param header corresponding to authorization header
+	 * @param header  corresponding to authorization header
 	 * @param patient
 	 * @return PatientBean corresponding to the patient updated
 	 */
@@ -138,18 +140,20 @@ public class PatientServiceImpl implements PatientService {
 			log.info("Patient saved id : {}, lastname : {}", patientUpdated.getId(), patientUpdated.getLastName());
 			context.resetUrl();
 			context.setReturnUrl(Redirect.PATIENTS);
-			
+
 		} catch (FeignException e) {
 
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl("/patient/validateUpdate/" + context.getPatientId());
 				context.setMessage(e.getLocalizedMessage());
 				context.setReturnUrl(HTMLPage.UPDATE_PATIENT);
 			}
 
 			if (e.status() == 400) {
+				log.info("A patient with the same firstName, lastName and dateOfBirth already exists", e.getMessage());
 				context.setMessage("A patient with the same firstName, lastName and dateOfBirth already exists");
 				context.setReturnUrl(HTMLPage.UPDATE_PATIENT);
 			}
@@ -158,9 +162,9 @@ public class PatientServiceImpl implements PatientService {
 	}
 
 	/**
-	 * Deletes the given patient in the patient app and database. 
+	 * Deletes the given patient in the patient app and database.
 	 * 
-	 * @param header corresponding to authorization header
+	 * @param header      corresponding to authorization header
 	 * @param PatientBean corresponding to the patient to delete
 	 */
 	@Override
@@ -171,11 +175,12 @@ public class PatientServiceImpl implements PatientService {
 			log.info("Patient deleted id : {}, lastname : {}", patient.getId(), patient.getLastName());
 			context.resetUrl();
 			context.setReturnUrl(Redirect.PATIENTS);
-			
+
 		} catch (FeignException e) {
 			log.info("FeignException status : {}, message : {}", e.status(), e.getMessage());
 
 			if (e.status() == 401) {
+				log.info("Exception 401", e.getMessage());
 				context.setRedirectAfterExceptionUrl(HTMLPage.PATIENTS);
 				context.setReturnUrl(Redirect.HOME);
 			}

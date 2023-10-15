@@ -3,17 +3,22 @@ package com.medilabo.medilabofrontapp.unittests.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.medilabo.medilabofrontapp.bean.NoteBean;
@@ -22,8 +27,14 @@ import com.medilabo.medilabofrontapp.context.Context;
 import com.medilabo.medilabofrontapp.model.User;
 import com.medilabo.medilabofrontapp.proxy.MicroserviceNoteProxy;
 import com.medilabo.medilabofrontapp.service.implementation.NoteServiceImpl;
+import com.medilabo.medilabofrontapp.service.implementation.PatientServiceImpl;
 
-@SpringBootTest
+import feign.FeignException;
+import feign.Request;
+import feign.Request.HttpMethod;
+import nl.altindag.log.LogCaptor;
+
+@ExtendWith(MockitoExtension.class)
 class NoteServiceTest {
 
 	@InjectMocks
@@ -35,6 +46,8 @@ class NoteServiceTest {
 	@Mock
 	Context context;
 	
+	LogCaptor logCaptor = LogCaptor.forClass(NoteServiceImpl.class);
+
 	PatientBean patient1;
 	String header;
 	String wrongHeader;
@@ -43,6 +56,7 @@ class NoteServiceTest {
 	List<NoteBean> notes;
 	NoteBean note1;
 	NoteBean note2;
+	FeignException unauthorizedException;
 	
 	@BeforeEach
 	void setUp() {
@@ -80,6 +94,9 @@ class NoteServiceTest {
 		notes = new ArrayList<>();
 		notes.add(note1);
 		notes.add(note2);
+		
+		unauthorizedException = new FeignException.Unauthorized("", Request.create(HttpMethod.GET, "", new HashMap(), new byte[0], Charset.defaultCharset()), new byte[0], new HashMap<>());
+
 	}
 	
 	@Test
@@ -96,19 +113,18 @@ class NoteServiceTest {
 		assertEquals(note1.getPatientId(), result.getPatientId());
 	}
 	
-	@Disabled
 	@Test
 	void addNote_Forbidden_Test() {
 
-//		// GIVEN
-//		when(context.getPatientId()).thenReturn(1);
-//		when(noteProxy.addNote(any(String.class), any(NoteBean.class))).thenReturn(note1);
-//
-//		// WHEN
-//		NoteBean result = noteService.addNote(header, note1);
-//
-//		// THEN
-//		assertEquals(note1.getPatientId(), result.getPatientId());
+		// GIVEN
+		when(context.getPatientId()).thenReturn(1);
+		when(noteProxy.addNote(any(String.class), any(NoteBean.class))).thenThrow(unauthorizedException);
+
+		// WHEN
+		noteService.addNote(header, note1);
+
+		// THEN
+		assertTrue(logCaptor.getLogEvents().get(1).getFormattedMessage().contains("FeignException status :"));
 	}
 	
 	@Test
@@ -124,18 +140,18 @@ class NoteServiceTest {
 		assertEquals(note1.getPatientId(), result.getPatientId());
 	}
 	
-	@Disabled
 	@Test
 	void getNote_Forbidden_Test() {
 		
-//		// GIVEN
-//		when(noteProxy.getNote(any(String.class), any(String.class))).thenReturn(note1);
-//
-//		// WHEN
-//		NoteBean result = noteService.getNote(header, note1.getId());
-//
-//		// THEN
-//		assertEquals(note1.getPatientId(), result.getPatientId());
+		// GIVEN
+		when(noteProxy.getNote(any(String.class), any(String.class))).thenThrow(unauthorizedException);
+
+		// WHEN
+		noteService.getNote(header, note1.getId());
+
+		// THEN
+		assertTrue(logCaptor.getLogEvents().get(0).getFormattedMessage().contains("FeignException status :"));
+		assertTrue(logCaptor.getLogEvents().get(1).getFormattedMessage().contains("Exception 401"));
 	}
 	
 	@Test
@@ -151,18 +167,18 @@ class NoteServiceTest {
 		assertTrue(result.contains(note2));
 	}
 	
-	@Disabled
 	@Test
 	void getNotes_Forbidden_Test() {
 		
-//		// GIVEN
-//		when(noteProxy.getNote(any(String.class), any(String.class))).thenReturn(note1);
-//
-//		// WHEN
-//		NoteBean result = noteService.getNote(header, note1.getId());
-//
-//		// THEN
-//		assertEquals(note1.getPatientId(), result.getPatientId());
+		// GIVEN
+		when(noteProxy.getNotes(any(String.class), any(Integer.class))).thenThrow(unauthorizedException);
+
+		// WHEN
+		noteService.getNotes(header, 1);
+
+		// THEN
+		assertTrue(logCaptor.getLogEvents().get(0).getFormattedMessage().contains("FeignException status :"));
+		assertTrue(logCaptor.getLogEvents().get(1).getFormattedMessage().contains("Exception 401"));
 	}
 	
 	@Test
@@ -179,42 +195,46 @@ class NoteServiceTest {
 		assertEquals(note1.getPatientId(), result.getPatientId());
 	}
 	
-	@Disabled
 	@Test
 	void updateNote_Forbidden_Test() {
 
-//		// GIVEN
-//		when(context.getPatientId()).thenReturn(1);
-//		when(noteProxy.updateNote(any(String.class), any(NoteBean.class))).thenReturn(note1);
-//
-//		// WHEN
-//		NoteBean result = noteService.updateNote(header, note1);
-//
-//		// THEN
-//		assertEquals(note1.getPatientId(), result.getPatientId());
+		// GIVEN
+		when(context.getPatientId()).thenReturn(1);
+		when(noteProxy.updateNote(any(String.class), any(NoteBean.class))).thenThrow(unauthorizedException);
+
+		// WHEN
+		noteService.updateNote(header, note1);
+
+		// THEN
+		assertTrue(logCaptor.getLogEvents().get(0).getFormattedMessage().contains("FeignException status :"));
+		assertTrue(logCaptor.getLogEvents().get(1).getFormattedMessage().contains("Exception 401"));
 	}
 	
 	
-	@Disabled
+	@Test
+	void deleteNote_Ok_Test() {
+
+		// GIVEN
+
+		// WHEN
+		noteService.deleteNote(header, note1);
+
+		// THEN
+		assertTrue(logCaptor.getLogEvents().get(0).getFormattedMessage().contains("Note deleted id : " + note1.getId()));
+	}
+	
 	@Test
 	void deleteNote_Forbidden_Test() {
 
-//		// GIVEN
-//
-//		// WHEN
-//		noteService.deleteNote(header, note1);
-//
-//		// THEN
-		
+		// GIVEN
+		doThrow(unauthorizedException).when(noteProxy).deleteNote(any(String.class), any(NoteBean.class));
+
+		// WHEN
+		noteService.deleteNote(header, note1);
+
+		// THEN
+		assertTrue(logCaptor.getLogEvents().get(0).getFormattedMessage().contains("FeignException status :"));
+		assertTrue(logCaptor.getLogEvents().get(1).getFormattedMessage().contains("Exception 401"));
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

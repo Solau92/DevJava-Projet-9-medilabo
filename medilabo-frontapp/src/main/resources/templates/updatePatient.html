@@ -16,10 +16,15 @@
 		<img th:src="@{../../images/medilaboBannerWithoutText.jpg}" />
 	</header>
 
+	<nav class="mx-4 p-4 text-end">
+		<a href="/patient/patients" class="btn btn-outline-info btn-sm">List of patients</a>
+		<a href="/logout" class="btn btn-outline-info btn-sm">Logout</a>
+	</nav>
+
 	<section>
 
 		<div class="mx-4 p-4">
-			<h1>Update patient :</h1>
+			<h1>Update patient</h1>
 		</div>
 
 		<div class="mx-4 p-4">
@@ -82,6 +87,7 @@
 
 				<div>
 					<button type="submit" class="btn btn-outline-info btn-lg">Update</button>
+					<a th:href="@{/patient/view/{id}(id=${patient.id})}" class="btn btn-outline-info btn-lg">Cancel</a>
 				</div>
 
 			</form>
