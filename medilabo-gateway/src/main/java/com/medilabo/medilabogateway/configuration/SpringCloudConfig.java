@@ -35,7 +35,8 @@ public class SpringCloudConfig {
 	@Bean
 	RouteLocator gatewayRoutes(RouteLocatorBuilder builder) {
 				
-		log.info("msGatewayUri : {}, msPatientUri : {}, msNoteUri : {}, msRiskUri : {}", msGatewayUri, msPatientUri, msNoteUri, msRiskUri);
+		log.info("msGatewayUri : {}, msPatientUri : {}, msNoteUri : {}, msRiskUri : {}", 
+				msGatewayUri, msPatientUri, msNoteUri, msRiskUri);
 		
 		return builder.routes()
 				.route(r -> r.path("/ms-patient/patient/**")

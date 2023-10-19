@@ -77,7 +77,7 @@ services:
     networks:
       - medilabo_network
 
-  mymongodb:
+  mongodb:
     image: mongo:6-jammy
     container_name: medilabo-noteapp-db
     command: mongod --port 27018
@@ -86,8 +86,9 @@ services:
     networks:
       - medilabo_network
     volumes: 
-       - mysqlmongodata:/var/lib/mongodb    
-
+       - mongodbdata:/data/db
+       - mongodbconfig:/data/configdb
+       
   medilabo-risk:
     build: ./medilabo-riskapp
     image: medilabo-riskapp
@@ -106,4 +107,5 @@ networks:
 
 volumes:
    mysqldbdata:
-   mysqlmongodata:
+   mongodbdata:
+   mongodbconfig:

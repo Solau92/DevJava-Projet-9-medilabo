@@ -47,7 +47,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 			if (e.status() == 401) {
 				log.info("Wrong username or password");
 				context.setMessage("Wrong username or password");
-				context.setRedirectAfterExceptionUrl(Redirect.HOME);
+				context.setRedirectAfterExceptionUrl(HTMLPage.HOME);
 			}
 		}
 		

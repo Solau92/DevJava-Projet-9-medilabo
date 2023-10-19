@@ -69,10 +69,9 @@ public class AuthenticationController {
 		String authHeader = "Basic " + new String(encodedBytes);
 		log.info("Authorization header : {}", authHeader);
 
-		model.addAttribute("message", context.getMessage());
 		authenticationService.login(authHeader, user);
 		
-		log.info("User logged");
+		log.info("After authenticationService.login");
 
 		return context.getReturnUrl();
 	}

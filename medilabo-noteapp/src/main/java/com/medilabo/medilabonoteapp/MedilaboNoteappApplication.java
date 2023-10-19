@@ -8,7 +8,7 @@ public class MedilaboNoteappApplication {
 
 	public static void main(String[] args) {
 		
-		System.setProperty("spring.profiles.active","dev");
+		System.setProperty("spring.profiles.active","prod");
 
 		SpringApplication.run(MedilaboNoteappApplication.class, args);
 	}

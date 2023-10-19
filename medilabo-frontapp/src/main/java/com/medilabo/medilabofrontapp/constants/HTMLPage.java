@@ -5,6 +5,8 @@ package com.medilabo.medilabofrontapp.constants;
  *
  */
 public class HTMLPage {
+	
+	public static final String HOME = "/";
 
 	public static final String LOGIN = "login";
 
