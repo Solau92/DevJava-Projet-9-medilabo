@@ -20,5 +20,5 @@ public enum Triggers {
 	private Triggers(String label) {
 		this.label = label;
 	}
-
+	
 }

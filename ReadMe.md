@@ -23,9 +23,6 @@ At the root of the whole project **../gitMedilabo**, you have a file named *dock
   - in mysqldb : </br>
       - MYSQL_ROOT_PASSWORD: *enter the root password of your local database* </br>
       - MYSQL_PASSWORD: *enter the username of your local database* </br>
-  - in medilabo-note : </br>
-      - MONGO_INITDB_ROOT_USERNAME: *enter the username of your local database* </br>
-      - MONGO_INITDB_ROOT_PASSWORD: *enter the password of your local database* </br>
 	
 In the directory **../gitMedilabo/medilabo-patientapp/src/main/resources**, in these three files : </br>
 - *application-dev.properties* </br>

@@ -38,8 +38,8 @@ services:
       - 18082:8082
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://medilabo-patientapp-db:13306/patients?autoReconnect=true&allowPublicKeyRetrieval=true&useSSL=false
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: mysql!
+      SPRING_DATASOURCE_USERNAME: 
+      SPRING_DATASOURCE_PASSWORD: 
     networks:
       - medilabo_network
       
@@ -48,9 +48,9 @@ services:
     container_name: medilabo-patientapp-db
     environment:
       MYSQL_TCP_PORT: 13306
-      MYSQL_ROOT_PASSWORD: mysql!
+      MYSQL_ROOT_PASSWORD: 
       MYSQL_DATABASE: patients
-      MYSQL_PASSWORD: mysql!
+      MYSQL_PASSWORD:
     ports:
       - 13306:13306
     healthcheck:
@@ -72,8 +72,6 @@ services:
       - 18083:8083
     environment:
         SPRING_DATA_MONGODB_URI: mongodb://medilabo-noteapp-db:27018/notes
-        MONGO_INITDB_ROOT_USERNAME: usernamemdb
-        MONGO_INITDB_ROOT_PASSWORD: passwordmdb
     networks:
       - medilabo_network
 
